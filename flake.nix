@@ -25,8 +25,8 @@
         specialArgs = { inherit inputs; inherit outputs; };
         modules = [
           ./hosts/thor
-          ./services/git
-          ./users/thomas
+          # ./services/git
+          # ./users/thomas
         ];
       };
     };
