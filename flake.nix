@@ -18,7 +18,7 @@
 
     # overlays = import ./overlays;
 
-    nixosConfiguration = {
+    nixosConfigurations = {
       # VPS in Chile
       thor = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
