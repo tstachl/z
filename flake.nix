@@ -9,14 +9,18 @@
   outputs = { self, nixpkgs, darwin, ...}@inputs:
   let
     inherit (self) outputs;
-    # supportedSystems = [ "aarch64-linux" "aarch64-darwin" ];
-    # forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+    supportedSystems = [ "aarch64-linux" "aarch64-darwin" ];
+    forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
   in rec {
     # nixosModules = import ./modules/nixos;
     # darwinModules = import ./modules/darwin;
     # homeModules = import ./modules/home;
 
     # overlays = import ./overlays;
+
+    packages = forAllSystems (system:
+      import ./pkgs { pkgs = legacyPackages.${system}; }
+    );
 
     nixosConfigurations = {
       # VPS in Chile
