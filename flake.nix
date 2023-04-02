@@ -18,6 +18,15 @@
 
     # overlays = import ./overlays;
 
+    legacyPackages = forAllSystems (system:
+      import nixpkgs {
+        inherit system;
+        # overlays = with outputs.overlays; [ additions modifications ];
+        config.allowUnfree = true;
+        config.allowUnsupportedSystem = true;
+      }
+    );
+
     packages = forAllSystems (system:
       import ./pkgs { pkgs = legacyPackages.${system}; }
     );
