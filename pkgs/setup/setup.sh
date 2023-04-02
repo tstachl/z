@@ -20,6 +20,13 @@ Arguments:
 EOM
 }
 
+while getopts ':h' opt; do
+  case $opt in
+    h) _usage; exit 0;;
+    *) ;;
+  esac
+done
+
 action=$( printf '%s\n' "${@:$OPTIND:1}" )
 hostname=$( printf '%s\n' "${@:$OPTIND+1:1}" )
 device=$( printf '%s\n' "${@:$OPTIND+2:1}" )
