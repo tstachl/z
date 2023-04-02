@@ -24,9 +24,8 @@
         system = "aarch64-linux";
         specialArgs = { inherit inputs; inherit outputs; };
         modules = [
-          ./hosts/thor
-          # ./services/git
-          # ./users/thomas
+          ./machines/thor
+          ./users/thomas
         ];
       };
     };
@@ -36,7 +35,10 @@
       meili = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         specialArgs = { inherit inputs; inherit outputs; };
-        modules = [ ./hosts/meili ./users/thomas ];
+        modules = [
+          ./machines/meili
+          ./users/thomas
+        ];
       };
     };
   };
