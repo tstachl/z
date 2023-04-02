@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root"
+   echo -e "This script must be run as root"
    exit 1
 fi
 
@@ -31,25 +31,25 @@ if [[ "$action" != "mount" && "$action" != "create" ]]; then
 fi
 
 if [ -z "$hostname" ]; then
-  echo "Error: hostname is required (eg. throwaway)\n"
+  echo -e "Error: hostname is required (eg. throwaway)\n"
   _usage
   exit 1
 fi
 
 if ! [[ $hostname =~ ^[0-9a-zA-Z_-]+$ ]]; then
-  echo "Error: hostname can only contain alphanumeric characters, underscore and dash\n"
+  echo -e "Error: hostname can only contain alphanumeric characters, underscore and dash\n"
   _usage
   exit 1
 fi
 
 if [ -z "$device" ]; then
-  echo "Error: device is required (eg. /dev/sda)\n"
+  echo -e "Error: device is required (eg. /dev/sda)\n"
   _usage
   exit 1
 fi
 
 if ! [ -b "$device" ]; then
-  echo "Error: device has to be a blockdevice\n"
+  echo -e "Error: device has to be a blockdevice\n"
   _usage
   exit 1
 fi
