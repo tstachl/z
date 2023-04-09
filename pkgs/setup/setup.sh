@@ -101,6 +101,8 @@ hostname=${hostname}
 device=${device[*]}
 swap_size=${swap_size}
 impermanence=${impermanence}
+
+swap=$( (( swap_size )) && echo "true" || echo "false")
 EOF
 
 function _partition {
@@ -116,15 +118,19 @@ function _partition {
     sgdisk -a 1 -n 1:0:+100K -t 1:EF02 -c "1:${PART_MBR}${i}" "${device[$i]}"
     sgdisk -n 2:1M:+1G -t 2:EFF00 -c "2:${PART_EFI}${i}" "${device[$i]}"
     sgdisk -n 3:0:+4G -t 3:BE00 -c "3:${PART_BOOT}${i}" "${device[$i]}"
-    sgdisk -n "4:0:+${swap_size}G" -t 4:8200 -c "4:${PART_SWAP}${i}" "${device[$i]}"
+    sgdisk -n 4:0:0 -t 5:BF00 -c "4:${PART_ROOT}${i}" "${device[$i]}"
 
-    sgdisk -n5:0:0 -t5:BF00 -c "5:${PART_ROOT}${i}" "${device[$i]}"
+    if (( swap_size )); then
+      sgdisk -n "5:-${swap_size}G:0" -t 5:8200 -c "4:${PART_SWAP}${i}" "${device[$i]}"
+    fi
 
     sync && udevadm settle && sleep 2
 
-    cryptsetup open --type plain --key-file /dev/random "${device[$i]}4" "${PART_SWAP}${i}"
-    mkswap "/dev/mapper/${PART_SWAP}${i}"
-    swapon "/dev/mapper/${PART_SWAP}${i}"
+    if (( swap_size )); then
+      cryptsetup open --type plain --key-file /dev/random "${device[$i]}5" "${PART_SWAP}${i}"
+      mkswap "/dev/mapper/${PART_SWAP}${i}"
+      swapon "/dev/mapper/${PART_SWAP}${i}"
+    fi
 
     (( i++ )) || true
   done
