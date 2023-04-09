@@ -123,11 +123,11 @@ function _partition {
 
     sync && udevadm settle && sleep 2
 
-    echo "sgdixk done"
-    # (( swap_size )) \
-    #   && cryptsetup open --type plain --key-file /dev/random "${device[$i]}4" "${PART_SWAP}${i}" \
-    #   && mkswap "/dev/mapper/${PART_SWAP}${i}" \
-    #   && swapon "/dev/mapper/${PART_SWAP}${i}"
+    if (( swap_size )); then
+      cryptsetup open --type plain --key-file /dev/random "${device[$i]}4" "${PART_SWAP}${i}"
+      mkswap "/dev/mapper/${PART_SWAP}${i}"
+      swapon "/dev/mapper/${PART_SWAP}${i}"
+    fi
 
     (( i++ )) || true
   done
@@ -138,8 +138,7 @@ function _partition {
 function _create {
   mirror=$([ "${#device[@]}" -gt "1" ] && echo "mirror" || echo "" )
 
-  echo "_create after mirror"
-  echo "mirror=${mirror}"
+  echo "before create"
 
   # create the boot pool
   zpool create \
@@ -157,6 +156,8 @@ function _create {
     -R /mnt \
     "${ZFS_BOOT}" "${mirror}" "/dev/disk/by-partlabel/${PART_BOOT}*"
 
+  echo "after create boot"
+
   # create the root pool
   zpool create \
     -o ashift=12 \
@@ -171,6 +172,8 @@ function _create {
     -O mountpoint=/ \
     -R /mnt \
     "${ZFS_ROOT}" "${mirror}" "/dev/disk/by-partlabel/${PART_ROOT}*"
+
+  echo "after create root"
 
   unset mirror
 
