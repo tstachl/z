@@ -152,7 +152,7 @@ function _create {
     -O xattr=sa \
     -O mountpoint=/boot \
     -R /mnt \
-    ${ZFS_BOOT} ${mirror} /dev/disk/by-partlabel/${PART_BOOT}*
+    "${ZFS_BOOT}" "${mirror}" "/dev/disk/by-partlabel/${PART_BOOT}*"
 
   # create the root pool
   zpool create \
@@ -167,25 +167,25 @@ function _create {
     -O xattr=sa \
     -O mountpoint=/ \
     -R /mnt \
-    ${ZFS_ROOT} ${mirror} /dev/disk/by-partlabel/${PART_ROOT}*
+    "${ZFS_ROOT}" "${mirror}" "/dev/disk/by-partlabel/${PART_ROOT}*"
 
   unset mirror
 
   # create root system container - TODO: think about encryption
-  zfs create -o canmount=off -o mountpoint=none ${ZFS_ROOT}/${ZFS_ROOT_VOL}
+  zfs create -o canmount=off -o mountpoint=none "${ZFS_ROOT}/${ZFS_ROOT_VOL}"
   # create boot container
-  zfs create -o mountpoint=none ${ZFS_BOOT}/${ZFS_ROOT_VOL}
+  zfs create -o mountpoint=none "${ZFS_BOOT}/${ZFS_ROOT_VOL}"
 
   # create system datasets
-  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/home
-  zfs create -o mountpoint=legacy -o atime=off ${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix
-  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/root
-  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/var
-  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/lib
-  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/log
+  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/home"
+  zfs create -o mountpoint=legacy -o atime=off "${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix"
+  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/root"
+  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var"
+  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/lib"
+  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/log"
 
   # create boot datasets
-  zfs create -o mountpoint=legacy ${ZFS_BOOT}/${ZFS_ROOT_VOL}/root
+  zfs create -o mountpoint=legacy "${ZFS_BOOT}/${ZFS_ROOT_VOL}/root"
 
   # create an empty snap
   # (( impermanence )) && zfs snapshot "${ZFS_ROOT}/${ZFS_ROOT_VOL}@${EMPTYSNAP}"
