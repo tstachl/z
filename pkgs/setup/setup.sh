@@ -60,10 +60,10 @@ done
 
 action=$( printf '%s\n' "${@:$OPTIND:1}" )
 hostname=$( printf '%s\n' "${@:$OPTIND+1:1}" )
-device=($( printf '%s\n' "${@:$OPTIND+2}" ))
+IFS=" " read -r -a device <<< "${@:$OPTIND+2}"
 
 if [[ "$action" != "mount" && "$action" != "create" ]]; then
-  device="$hostname $device"
+  IFS=" " read -r -a device <<< "$hostname ${device[*]}"
   hostname=$action
   action="create"
 fi
@@ -80,13 +80,13 @@ if ! [[ $hostname =~ ^[0-9a-zA-Z_-]+$ ]]; then
   exit 1
 fi
 
-if [ -z "$device" ]; then
+if [ -z "${device[*]}" ]; then
   echo -e "Error: device is required (eg. /dev/sda)\n"
   _usage
   exit 1
 fi
 
-for i in ${device}; do
+for i in "${device[@]}"; do
   if ! [ -b "$i" ]; then
     echo -e "Error: device ($i) has to be a blockdevice\n"
     _usage
@@ -98,7 +98,7 @@ unset i
 cat << EOF
 action=${action}
 hostname=${hostname}
-device=${device[@]}
+device=${device[*]}
 swap_size=${swap_size}
 impermanence=${impermanence}
 EOF
@@ -187,20 +187,20 @@ function _partition {
 #
 # }
 
-function _mount {
-  # Mount Everything
-  mount -t tmpfs -o defaults,mode=755 none /mnt
-
-  [ ! -d "/mnt/nix" ] && mkdir /mnt/nix
-  [ ! -d "/mnt/persist" ] && mkdir /mnt/persist
-
-  zpool import -fd "/dev/disk/by-label/$hostname" "$hostname"
-  mount -t zfs "${hostname}/nix" /mnt/nix
-  mount -t zfs "${hostname}/persist" /mnt/persist
-
-  [ ! -d "/mnt/boot" ] && mkdir /mnt/boot
-  mount /dev/disk/by-label/boot /mnt/boot
-}
+# function _mount {
+#   # Mount Everything
+#   mount -t tmpfs -o defaults,mode=755 none /mnt
+#
+#   [ ! -d "/mnt/nix" ] && mkdir /mnt/nix
+#   [ ! -d "/mnt/persist" ] && mkdir /mnt/persist
+#
+#   zpool import -fd "/dev/disk/by-label/$hostname" "$hostname"
+#   mount -t zfs "${hostname}/nix" /mnt/nix
+#   mount -t zfs "${hostname}/persist" /mnt/persist
+#
+#   [ ! -d "/mnt/boot" ] && mkdir /mnt/boot
+#   mount /dev/disk/by-label/boot /mnt/boot
+# }
 
 [ "$action" == "create" ] && _partition # && _create
 # _mount
