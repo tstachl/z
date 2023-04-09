@@ -123,10 +123,10 @@ function _partition {
 
     sync && udevadm settle && sleep 2
 
-    (( swap_size )) \
-      && cryptsetup open --type plain --key-file /dev/random "${device[$i]}4" "${PART_SWAP}${i}" \
-      && mkswap "/dev/mapper/${PART_SWAP}${i}" \
-      && swapon "/dev/mapper/${PART_SWAP}${i}"
+    # (( swap_size )) \
+    #   && cryptsetup open --type plain --key-file /dev/random "${device[$i]}4" "${PART_SWAP}${i}" \
+    #   && mkswap "/dev/mapper/${PART_SWAP}${i}" \
+    #   && swapon "/dev/mapper/${PART_SWAP}${i}"
 
     (( i++ )) || true
   done
