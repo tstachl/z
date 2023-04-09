@@ -123,6 +123,7 @@ function _partition {
 
     sync && udevadm settle && sleep 2
 
+    echo "sgdixk done"
     # (( swap_size )) \
     #   && cryptsetup open --type plain --key-file /dev/random "${device[$i]}4" "${PART_SWAP}${i}" \
     #   && mkswap "/dev/mapper/${PART_SWAP}${i}" \
@@ -136,6 +137,9 @@ function _partition {
 
 function _create {
   mirror=$([ "${#device[@]}" -gt "1" ] && echo "mirror" || echo "" )
+
+  echo "_create after mirror"
+  echo "mirror=${mirror}"
 
   # create the boot pool
   zpool create \
