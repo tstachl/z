@@ -112,19 +112,19 @@ function _partition {
     # ALL DATA WILL BE LOST
     # blkdiscard -f $i
 
-    sgdisk --zap-all ${device[$i]}
-    sgdisk -a1 -n1:0:+100K -t1:EF02 -c 1:${PART_MBR}${i} ${device[$i]}
-    sgdisk -n2:1M:+1G -t2:EFF00 -c 2:${PART_EFI}${i} ${device[$i]}
-    sgdisk -n3:0:+4G -t3:BE00 -c 3:${PART_BOOT}${i} ${device[$i]}
-    sgdisk -n4:0:+${swap_size}G -t4:8200 -c 4:${PART_SWAP}${i} ${device[$i]}
+    sgdisk --zap-all "${device[$i]}"
+    sgdisk -a 1 -n 1:0:+100K -t 1:EF02 -c "1:${PART_MBR}${i}" "${device[$i]}"
+    sgdisk -n 2:1M:+1G -t 2:EFF00 -c "2:${PART_EFI}${i}" "${device[$i]}"
+    sgdisk -n 3:0:+4G -t 3:BE00 -c "3:${PART_BOOT}${i}" "${device[$i]}"
+    sgdisk -n "4:0:+${swap_size}G" -t 4:8200 -c "4:${PART_SWAP}${i}" "${device[$i]}"
 
-    sgdisk -n5:0:0 -t5:BF00 -c 5:${PART_ROOT}${i} ${device[$i]}
+    sgdisk -n5:0:0 -t5:BF00 -c "5:${PART_ROOT}${i}" "${device[$i]}"
 
     sync && udevadm settle && sleep 2
 
-    cryptsetup open --type plain --key-file /dev/random ${PART_SWAP}${i} ${PART_SWAP}${i}
-    mkswap /dev/mapper/${PART_SWAP}${i}
-    swapon /dev/mapper/${PART_SWAP}${i}
+    cryptsetup open --type plain --key-file /dev/random "${PART_SWAP}${i}" "${PART_SWAP}${i}"
+    mkswap "/dev/mapper/${PART_SWAP}${i}"
+    swapon "/dev/mapper/${PART_SWAP}${i}"
 
     (( i++ )) || true
   done
