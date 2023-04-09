@@ -6,33 +6,64 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# How to name the partitions. This will be visible in 'gdisk -l /dev/disk' and
+# in /dev/disk/by-partlabel.
+PART_MBR="${PART_MBR:=bootcode}"
+PART_EFI="${PART_EFI:=efiboot}"
+PART_BOOT="${PART_BOOT:=bpool}"
+PART_SWAP="${PART_SWAP:=swap}"
+PART_ROOT="${PART_ROOT:=rpool}"
+
+# How to name the boot pool and root pool.
+ZFS_BOOT="${ZFS_BOOT:=bpool}"
+ZFS_ROOT="${ZFS_ROOT:=rpool}"
+
+# How to name the root volume in which nixos will be installed.
+# If ZFS_ROOT is set to "rpool" and ZFS_ROOT_VOL is set to "nixos",
+# nixos will be installed in rpool/nixos, with a few extra subvolumes
+# (datasets).
+ZFS_ROOT_VOL="${ZFS_ROOT_VOL:=nixos}"
+
+# Generate a root password with mkpasswd -m SHA-512
+ROOTPW="${ROOTPW:-}"
+
+# If IMPERMANENCE is 1, this will be the name of the empty snapshots
+EMPTYSNAP="${EMPTYSNAP:-EMPTY}"
+
 function _usage {
   cat <<EOM
 Usage: $(basename "$0") [options] <action> <hostname> <device>
 
 Options:
   -h          show usage information
+  -i          switch on impermanence
+  -s <size>   define swap size (default: 4)
 
 Arguments:
   action      can be mount or create (default: create)
   hostname    the hostname for this machine
-  device      the disk device (eg. /dev/sda)
+  device      the disk (eg. /dev/sda) or disks (eg. /dev/sda /dev/sdb)
 EOM
 }
 
-while getopts ':h' opt; do
+swap_size=4
+impermanence="${IMPERMANENCE:-0}"
+
+while getopts ':his:' opt; do
   case $opt in
     h) _usage; exit 0;;
+    i) impermanence=1;;
+    s) [[ $OPTARG == ?(-)+([0-9]) ]] && swap_size=$OPTARG;;
     *) ;;
   esac
 done
 
 action=$( printf '%s\n' "${@:$OPTIND:1}" )
 hostname=$( printf '%s\n' "${@:$OPTIND+1:1}" )
-device=$( printf '%s\n' "${@:$OPTIND+2:1}" )
+device=($( printf '%s\n' "${@:$OPTIND+2}" ))
 
 if [[ "$action" != "mount" && "$action" != "create" ]]; then
-  device=$hostname
+  device="$hostname $device"
   hostname=$action
   action="create"
 fi
@@ -55,25 +86,105 @@ if [ -z "$device" ]; then
   exit 1
 fi
 
-if ! [ -b "$device" ]; then
-  echo -e "Error: device has to be a blockdevice\n"
-  _usage
-  exit 1
-fi
+for i in ${device}; do
+  if ! [ -b "$i" ]; then
+    echo -e "Error: device ($i) has to be a blockdevice\n"
+    _usage
+    exit 1
+  fi
+done
+unset i
+
+cat << EOF
+action=${action}
+hostname=${hostname}
+device=${device[@]}
+swap_size=${swap_size}
+impermanence=${impermanence}
+EOF
+
+function _partition {
+  i=0
+
+  for (( i=0; i<${#device[@]}; i++ )); do
+    # wipe flash-based storage device to improve
+    # performance.
+    # ALL DATA WILL BE LOST
+    # blkdiscard -f $i
+
+    sgdisk --zap-all ${device[$i]}
+    sgdisk -a1 -n1:0:+100K -t1:EF02 -c 1:${PART_MBR}${i} ${device[$i]}
+    sgdisk -n2:1M:+1G -t2:EFF00 -c 2:${PART_EFI}${i} ${device[$i]}
+    sgdisk -n3:0:+4G -t3:BE00 -c 3:${PART_BOOT}${i} ${device[$i]}
+    sgdisk -n4:0:+${swap_size}G -t4:8200 -c 4:${PART_SWAP}${i} ${device[$i]}
+
+    sgdisk -n5:0:0 -t5:BF00 -c 5:${PART_ROOT}${i} ${device[$i]}
+
+    sync && udevadm settle && sleep 2
+
+    cryptsetup open --type plain --key-file /dev/random ${PART_SWAP}${i} ${PART_SWAP}${i}
+    mkswap /dev/mapper/${PART_SWAP}${i}
+    swapon /dev/mapper/${PART_SWAP}${i}
+
+    (( i++ )) || true
+  done
+
+  unset i
+}
 
 function _create {
-  # Creating Partitions
-  parted "$device" -- mklabel gpt
-  parted "$device" -- mkpart primary 512mb 100%
-  parted "$device" -- mkpart ESP fat32 1mb 512mb
-  parted "$device" -- set 2 esp on
+  # create the boot pool
+  mirror=$([ "${#device[@]}" -gt "1" ] && echo "mirror" || echo "" )
+  zpool create \
+    -o compatibility=grub2 \
+    -o ashift=12 \
+    -o autotrim=on \
+    -O acltype=posixacl \
+    -O canmount=off \
+    -O compression=lz4 \
+    -O devices=off \
+    -O normalization=formD \
+    -O relatime=on \
+    -O xattr=sa \
+    -O mountpoint=/boot \
+    -R /mnt \
+    ${ZFS_BOOT} ${mirror} /dev/disk/by-partlabel/${PART_BOOT}*
 
-  # Formatting Partitions
-  mkfs.fat -F 32 -n boot "${device}2"
+  # create the root pool
+  zpool create \
+    -o ashift=12 \
+    -o autotrim=on \
+    -O acltype=posixacl \
+    -O canmount=off \
+    -O compression=zstd \
+    -O dnodesize=auto \
+    -O normalization=formD \
+    -O relatime=on \
+    -O xattr=sa \
+    -O mountpoint=/ \
+    -R /mnt \
+    ${ZFS_ROOT} ${mirror} /dev/disk/by-partlabel/${PART_ROOT}*
+  unset mirror
 
-  zpool create -O compress=on -O mountpoint=legacy "$hostname" "${device}1" -f
-  zfs create -o xattr=off -o atime=off "${hostname}/nix"
-  zfs create -o xattr=off -o atime=off "${hostname}/persist"
+  # create root system container - TODO: think about encryption
+  zfs create -o canmount=off -o mountpoint=none ${ZFS_ROOT}/${ZFS_ROOT_VOL}
+  # create boot container
+  zfs create -o mountpoint=none ${ZFS_BOOT}/${ZFS_ROOT_VOL}
+
+  # create system datasets
+  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/home
+  zfs create -o mountpoint=legacy -o atime=off ${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix
+  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/root
+  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/var
+  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/lib
+  zfs create -o mountpoint=legacy ${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/log
+
+  # create boot datasets
+  zfs create -o mountpoint=legacy ${ZFS_BOOT}/${ZFS_ROOT_VOL}/root
+
+  # create an empty snap
+  zfs snapshot ${ZFS_ROOT}/${ZFS_ROOT_VOL}${i}@${EMPTYSNAP}
+
 }
 
 function _mount {
@@ -92,5 +203,5 @@ function _mount {
 }
 
 [ "$action" == "create" ] && _create
-_mount
+# _mount
 
