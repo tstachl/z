@@ -118,10 +118,10 @@ function _partition {
     sgdisk -a 1 -n 1:0:+100K -t 1:EF02 -c "1:${PART_MBR}${i}" "${device[$i]}"
     sgdisk -n 2:1M:+1G -t 2:EFF00 -c "2:${PART_EFI}${i}" "${device[$i]}"
     sgdisk -n 3:0:+4G -t 3:BE00 -c "3:${PART_BOOT}${i}" "${device[$i]}"
-    sgdisk -n 4:0:0 -t 5:BF00 -c "4:${PART_ROOT}${i}" "${device[$i]}"
+    sgdisk -n 4:0:0 -t 4:BF00 -c "4:${PART_ROOT}${i}" "${device[$i]}"
 
     if (( swap_size )); then
-      sgdisk -n "5:-${swap_size}G:0" -t 5:8200 -c "4:${PART_SWAP}${i}" "${device[$i]}"
+      sgdisk -n "5:-${swap_size}G:0" -t 5:8200 -c "5:${PART_SWAP}${i}" "${device[$i]}"
     fi
 
     sync && udevadm settle && sleep 2
