@@ -6,6 +6,78 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# define usage function
+usage() {
+  echo "Usage: $(basename $0) [-h] [-i] [-s size] [ACTION] HOSTNAME DEVICE [DEVICE...]"
+  echo "  -h: Show usage information"
+  echo "  -i: Enable impermanence"
+  echo "  -s: Define swap size in GB (default: 2)"
+  echo "  ACTION: Action to perform (mount or create). Defaults to mount."
+  echo "  HOSTNAME: Hostname"
+  echo "  DEVICE: One or more block devices"
+  exit 0
+}
+
+# define default values
+action=mount
+swap_size=2
+impermanence=false
+
+# parse command line options
+while getopts ":his:" opt; do
+  case ${opt} in
+    h ) usage ;;
+    i ) impermanence=true ;;
+    s ) swap_size=$OPTARG ;;
+    \? )
+      echo "Invalid option: -$OPTARG" 1>&2
+      usage
+      ;;
+    : )
+      echo "Option -$OPTARG requires an argument." 1>&2
+      usage
+      ;;
+  esac
+done
+
+# shift options so that positional parameters start from $1 again
+shift $((OPTIND -1))
+
+# check if the first argument is an action
+if [[ "$1" == "mount" || "$1" == "create" ]]; then
+    action="$1"
+    shift
+fi
+
+# validate required arguments
+if [ $# -lt 2 ]; then
+  echo "Invalid number of arguments." 1>&2
+  usage
+fi
+
+if [ -z "$1" ]; then
+  echo "Hostname is required." 1>&2
+  usage
+fi
+
+for device in "${@:2}"; do
+  if ! [[ -b "${device}" ]]; then
+    echo "${device} is not a block device." 1>&2
+    usage
+  fi
+done
+
+# set variables from arguments
+hostname=$1
+devices=${@:2}
+
+# output selected options and arguments
+echo "Action: ${action}"
+echo "Impermanence: ${impermanence}"
+echo "Swap size: ${swap_size}GB"
+echo "Hostname: ${hostname}"
+echo "Block devices: ${devices}"
+
 # How to name the partitions. This will be visible in 'gdisk -l /dev/disk' and
 # in /dev/disk/by-partlabel.
 PART_MBR="${PART_MBR:=bootcode}"
@@ -13,6 +85,37 @@ PART_EFI="${PART_EFI:=efiboot}"
 PART_BOOT="${PART_BOOT:=bpool}"
 PART_SWAP="${PART_SWAP:=swap}"
 PART_ROOT="${PART_ROOT:=rpool}"
+
+# partition the block devices
+function _partition {
+  local i=0
+
+  for (( i=0; i<${#devices[@]}; i++ )); do
+    # wipe flash-based storage device to improve
+    # performance.
+    # ALL DATA WILL BE LOST
+    # blkdiscard -f $i
+
+    sgdisk --zap-all "${devices[$i]}"
+    sgdisk -a 1 -n 0:0:+100K -t 0:EF02 -c "0:${PART_MBR}${i}" "${devices[$i]}"
+    sgdisk -n 0:1M:+1G -t 0:EFF00 -c "0:${PART_EFI}${i}" "${devices[$i]}"
+    sgdisk -n 0:0:+4G -t 0:BE00 -c "0:${PART_BOOT}${i}" "${devices[$i]}"
+    (( swap_size )) && sgdisk -n "0:0:+${swap_size}G" -t 0:8200 -c "0:${PART_SWAP}${i}" "${devices[$i]}"
+    sgdisk -n 0:0:0 -t 0:BF00 -c "0:${PART_ROOT}${i}" "${devices[$i]}"
+
+    sync && udevadm settle && sleep 2
+
+    if (( swap_size )); then
+      cryptsetup open --type plain --key-file /dev/random "${devices[$i]}4" "${PART_SWAP}${i}"
+      mkswap "/dev/mapper/${PART_SWAP}${i}"
+      swapon "/dev/mapper/${PART_SWAP}${i}"
+    fi
+
+    (( i++ )) || true
+  done
+
+  unset i
+}
 
 # How to name the boot pool and root pool.
 ZFS_BOOT="${ZFS_BOOT:=bpool}"
@@ -30,113 +133,12 @@ ROOTPW="${ROOTPW:-}"
 # If IMPERMANENCE is 1, this will be the name of the empty snapshots
 EMPTYSNAP="${EMPTYSNAP:-EMPTY}"
 
-function _usage {
-  cat <<EOM
-Usage: $(basename "$0") [options] <action> <hostname> <device>
-
-Options:
-  -h          show usage information
-  -i          switch on impermanence
-  -s <size>   define swap size (default: 4)
-
-Arguments:
-  action      can be mount or create (default: create)
-  hostname    the hostname for this machine
-  device      the disk (eg. /dev/sda) or disks (eg. /dev/sda /dev/sdb)
-EOM
-}
-
-swap_size=4
-impermanence="${IMPERMANENCE:-0}"
-
-while getopts ':his:' opt; do
-  case $opt in
-    h) _usage; exit 0;;
-    i) impermanence=1;;
-    s) [[ $OPTARG == ?(-)+([0-9]) ]] && swap_size=$OPTARG;;
-    *) ;;
-  esac
-done
-
-action=$( printf '%s\n' "${@:$OPTIND:1}" )
-hostname=$( printf '%s\n' "${@:$OPTIND+1:1}" )
-IFS=" " read -r -a device <<< "${@:$OPTIND+2}"
-
-if [[ "$action" != "mount" && "$action" != "create" ]]; then
-  IFS=" " read -r -a device <<< "$hostname ${device[*]}"
-  hostname=$action
-  action="create"
-fi
-
-if [ -z "$hostname" ]; then
-  echo -e "Error: hostname is required (eg. throwaway)\n"
-  _usage
-  exit 1
-fi
-
-if ! [[ $hostname =~ ^[0-9a-zA-Z_-]+$ ]]; then
-  echo -e "Error: hostname can only contain alphanumeric characters, underscore and dash\n"
-  _usage
-  exit 1
-fi
-
-if [ -z "${device[*]}" ]; then
-  echo -e "Error: device is required (eg. /dev/sda)\n"
-  _usage
-  exit 1
-fi
-
-for i in "${device[@]}"; do
-  if ! [ -b "$i" ]; then
-    echo -e "Error: device ($i) has to be a blockdevice\n"
-    _usage
-    exit 1
-  fi
-done
-unset i
-
-cat << EOF
-action=${action}
-hostname=${hostname}
-device=${device[*]}
-swap_size=${swap_size}
-impermanence=${impermanence}
-
-swap=$( (( swap_size )) && echo "true" || echo "false")
-EOF
-
-function _partition {
-  i=0
-
-  for (( i=0; i<${#device[@]}; i++ )); do
-    # wipe flash-based storage device to improve
-    # performance.
-    # ALL DATA WILL BE LOST
-    # blkdiscard -f $i
-
-    sgdisk --zap-all "${device[$i]}"
-    sgdisk -a 1 -n 0:0:+100K -t 0:EF02 -c "0:${PART_MBR}${i}" "${device[$i]}"
-    sgdisk -n 0:1M:+1G -t 0:EFF00 -c "0:${PART_EFI}${i}" "${device[$i]}"
-    sgdisk -n 0:0:+4G -t 0:BE00 -c "0:${PART_BOOT}${i}" "${device[$i]}"
-    (( swap_size )) && sgdisk -n "0:0:+${swap_size}G" -t 0:8200 -c "0:${PART_SWAP}${i}" "${device[$i]}"
-    sgdisk -n 0:0:0 -t 0:BF00 -c "0:${PART_ROOT}${i}" "${device[$i]}"
-
-    sync && udevadm settle && sleep 2
-
-    if (( swap_size )); then
-      cryptsetup open --type plain --key-file /dev/random "${device[$i]}4" "${PART_SWAP}${i}"
-      mkswap "/dev/mapper/${PART_SWAP}${i}"
-      swapon "/dev/mapper/${PART_SWAP}${i}"
-    fi
-
-    (( i++ )) || true
-  done
-
-  unset i
-}
-
 function _create {
-  mirror=$([ "${#device[@]}" -gt "1" ] && echo "mirror" || echo "" )
+  if [ "${#device[@]}" -gt "1" ]; then
+    mirror="${ZFS_BOOT} mirror"
+  else
+    mirror="${ZFS_BOOT}"
+  fi
 
   echo "before create"
 
@@ -154,7 +156,7 @@ function _create {
     -O xattr=sa \
     -O mountpoint=/boot \
     -R /mnt \
-    "${ZFS_BOOT}" "${mirror}" "/dev/disk/by-partlabel/${PART_BOOT}*"
+    "${mirror}" "/dev/disk/by-partlabel/${PART_BOOT}*"
 
   echo "after create boot"
 
@@ -171,7 +173,7 @@ function _create {
     -O xattr=sa \
     -O mountpoint=/ \
     -R /mnt \
-    "${ZFS_ROOT}" "${mirror}" "/dev/disk/by-partlabel/${PART_ROOT}*"
+    "${mirror}" "/dev/disk/by-partlabel/${PART_ROOT}*"
 
   echo "after create root"
 
@@ -213,6 +215,12 @@ function _create {
 #   mount /dev/disk/by-label/boot /mnt/boot
 # }
 
-[ "$action" == "create" ] && _partition && _create
-# _mount
+function main {
+  if [ "$action" == "create" ]; then
+    _partition
+    _create
+  fi
+  _mount
+}
 
+main
