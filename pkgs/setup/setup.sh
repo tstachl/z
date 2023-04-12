@@ -8,7 +8,7 @@ fi
 
 # define usage function
 usage() {
-  echo "Usage: $(basename $0) [-h] [-i] [-s size] [ACTION] HOSTNAME DEVICE [DEVICE...]"
+  echo "Usage: $(basename "$0") [-h] [-i] [-s size] [ACTION] HOSTNAME DEVICE [DEVICE...]"
   echo "  -h: Show usage information"
   echo "  -i: Enable impermanence"
   echo "  -s: Define swap size in GB (default: 2)"
@@ -69,7 +69,7 @@ done
 
 # set variables from arguments
 hostname=$1
-devices=${@:2}
+devices=${*:2}
 
 # output selected options and arguments
 echo "Action: ${action}"
