@@ -227,7 +227,7 @@ function main {
     _partition
     _create
   fi
-  _mount
+  # _mount
 }
 
 main
