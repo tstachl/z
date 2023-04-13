@@ -43,6 +43,13 @@ done
 # shift options so that positional parameters start from $1 again
 shift $((OPTIND -1))
 
+if [[ "$1" == "ssh" ]]; then
+  mkdir ~/.ssh && touch ~/.ssh/authorized_keys
+  curl https://github.com/tstachl.keys >> ~/.ssh/authorized_keys
+  ifconfig
+  exit 0
+fi
+
 # check if the first argument is an action
 if [[ "$1" == "mount" || "$1" == "create" ]]; then
     action="$1"
