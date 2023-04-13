@@ -94,7 +94,8 @@ PART_SWAP="${PART_SWAP:=swap}"
 PART_ROOT="${PART_ROOT:=rpool}"
 
 # partition the block devices
-function _partition {
+_partition() {
+  local devices=$1
   local i=0
 
   for (( i=0; i<${#devices[@]}; i++ )); do
@@ -224,7 +225,7 @@ function _create {
 
 function main {
   if [ "$action" == "create" ]; then
-    _partition
+    _partition $devices
     _create
   fi
   # _mount
