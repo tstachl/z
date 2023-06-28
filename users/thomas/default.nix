@@ -31,9 +31,6 @@ in
 
   programs = {
     bash.enable = true;
-    fish.enable = true;
-    home-manager.enable = false;
-    zsh.enable = false;
   };
 
   xdg.enable = true;
