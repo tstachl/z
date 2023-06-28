@@ -2,57 +2,43 @@
   description = "more modular configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
     darwin.url = "github:lnl7/nix-darwin/master";
+    home-manager.url = "github:nix-community/home-manager";
+    flake-utils.url = "github:numtide/flake-utils";
+    nur.url = "github:nix-community/nur";
   };
 
-  outputs = { self, nixpkgs, darwin, ...}@inputs:
-  let
-    inherit (self) outputs;
-    supportedSystems = [ "aarch64-linux" "aarch64-darwin" ];
-    forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-  in rec {
-    # nixosModules = import ./modules/nixos;
-    # darwinModules = import ./modules/darwin;
-    # homeModules = import ./modules/home;
+  outputs =
+    { self
+    , nixpkgs
+    , darwin
+    , home-manager
+    , nur
+    , flake-utils
+    }@inputs:
 
-    # overlays = import ./overlays;
-
-    legacyPackages = forAllSystems (system:
-      import nixpkgs {
-        inherit system;
-        # overlays = with outputs.overlays; [ additions modifications ];
-        config.allowUnfree = true;
-        config.allowUnsupportedSystem = true;
+      {
+        homeManagerModules = {};
       }
-    );
 
-    packages = forAllSystems (system:
-      import ./pkgs { pkgs = legacyPackages.${system}; }
-    );
+      //
 
-    nixosConfigurations = {
-      # VPS in Chile
-      thor = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-        specialArgs = { inherit inputs; inherit outputs; };
-        modules = [
-          ./machines/thor
-          ./users/thomas
-        ];
-      };
-    };
+      flake-utils.lib.eachDefaultSystem (system:
+      let
+        overlays = [];
+        pkgs = import nixpkgs { inherit overlays system; };
+      in {
 
-    darwinConfigurations = {
-      # Macbook Air M2
-      meili = darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        specialArgs = { inherit inputs; inherit outputs; };
-        modules = [
-          ./machines/meili
-          ./users/thomas
-        ];
-      };
-    };
-  };
+        packages.homeConfigurations = {
+
+          thomas = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            extraSpecialArgs = { inherit inputs; inherit (self) outputs; };
+
+            modules = [ ./users/thomas ];
+          };
+
+        };
+      });
 }
