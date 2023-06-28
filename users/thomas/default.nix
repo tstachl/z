@@ -30,8 +30,9 @@ in
   manual.manpages.enable = false;
 
   programs = {
-    home-manager.enable = true;
     bash.enable = true;
+    fish.enable = true;
+    home-manager.enable = false;
     zsh.enable = false;
   };
 
