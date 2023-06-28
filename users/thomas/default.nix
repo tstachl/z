@@ -32,6 +32,7 @@ in
   programs = {
     home-manager.enable = true;
     bash.enable = true;
+    zsh.enable = false;
   };
 
   xdg.enable = true;
