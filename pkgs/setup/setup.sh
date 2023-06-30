@@ -1,6 +1,3 @@
-#!/run/current-system/sw/bin/bash
-set -euo pipefail
-
 # define usage function
 usage() {
   echo "Usage: $(basename "$0") [-h] [-i] [-s size] [ACTION] HOSTNAME DEVICE [DEVICE...]"
@@ -191,7 +188,9 @@ function _create {
 
   # create system datasets
   zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/home"
-  (( impermanence )) && zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/persist"
+  if [ $impermanence ]; then
+    zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/persist"
+  fi
   zfs create -o atime=off "${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix"
   zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/root"
   zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var"
