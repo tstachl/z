@@ -24,10 +24,10 @@ if [[ "$1" == "ssh" ]]; then
   exit 0
 fi
 
-if [[ $EUID -ne 0 ]]; then
-   echo -e "This script must be run as root"
-   exit 1
-fi
+# if [[ $EUID -ne 0 ]]; then
+#    echo -e "This script must be run as root"
+#    exit 1
+# fi
 
 # define default values
 action=mount
@@ -78,9 +78,11 @@ for device in "${@:2}"; do
   fi
 done
 
+unset device
+
 # set variables from arguments
 hostname=$1
-devices=${*:2}
+devices=( ${*:2} )
 
 # output selected options and arguments
 echo "Action: ${action}"
@@ -99,33 +101,31 @@ PART_ROOT="${PART_ROOT:=rpool}"
 
 # partition the block devices
 _partition() {
-  local ii=0
+  local i=0
 
-  for i in $devices; do
+  for (( i=0; i<${#devices[@]}; i++ )); do
     # wipe flash-based storage device to improve
     # performance.
     # ALL DATA WILL BE LOST
     # blkdiscard -f $i
 
-    sgdisk --zap-all "${i}"
-    sgdisk -a 1 -n 0:0:+100K -t 0:EF02 -c "0:${PART_MBR}${ii}" "${i}"
-    sgdisk -n 0:1M:+1G -t 0:EFF00 -c "0:${PART_EFI}${ii}" "${i}"
-    sgdisk -n 0:0:+4G -t 0:BE00 -c "0:${PART_BOOT}${ii}" "${i}"
-    (( swap_size )) && sgdisk -n "0:0:+${swap_size}G" -t 0:8200 -c "0:${PART_SWAP}${ii}" "${i}"
-    sgdisk -n 0:0:0 -t 0:BF00 -c "0:${PART_ROOT}${ii}" "${i}"
+    sgdisk --zap-all "${devices[$i]}"
+    sgdisk -a 1 -n 0:0:+100K -t 0:EF02 -c "0:${PART_MBR}${i}" "${devices[$i]}"
+    sgdisk -n 0:1M:+1G -t 0:EFF00 -c "0:${PART_EFI}${i}" "${devices[$i]}"
+    sgdisk -n 0:0:+4G -t 0:BE00 -c "0:${PART_BOOT}${i}" "${devices[$i]}"
+    (( swap_size )) && sgdisk -n "0:0:+${swap_size}G" -t 0:8200 -c "0:${PART_SWAP}${i}" "${devices[$i]}"
+    sgdisk -n 0:0:0 -t 0:BF00 -c "0:${PART_ROOT}${i}" "${devices[$i]}"
 
     sync && udevadm settle && sleep 2
 
     if (( swap_size )); then
-      cryptsetup open --type plain --key-file /dev/random "${i}4" "${PART_SWAP}${ii}"
-      mkswap "/dev/mapper/${PART_SWAP}${ii}"
-      swapon "/dev/mapper/${PART_SWAP}${ii}"
+      cryptsetup open --type plain --key-file /dev/random "${devices[$i]}4" "${PART_SWAP}${i}"
+      mkswap "/dev/mapper/${PART_SWAP}${i}"
+      swapon "/dev/mapper/${PART_SWAP}${i}"
     fi
-
-    (( ii++ )) || true
   done
 
-  unset i ii
+  unset i
 }
 
 # How to name the boot pool and root pool.
@@ -145,7 +145,7 @@ ROOTPW="${ROOTPW:-}"
 EMPTYSNAP="${EMPTYSNAP:-EMPTY}"
 
 function _create {
-  if [ "${#device[@]}" -gt "1" ]; then
+  if [ "${#devices[@]}" -gt "1" ]; then
     mirror="${ZFS_BOOT} mirror"
   else
     mirror="${ZFS_BOOT}"
@@ -229,7 +229,7 @@ function _create {
 function main {
   if [ "$action" == "create" ]; then
     _partition
-    # _create
+    _create
   fi
   # _mount
 }
