@@ -52,7 +52,7 @@ done
 shift $((OPTIND -1))
 
 # check if the first argument is an action
-if [[ "$1" == "mount" || "$1" == "create" ]]; then
+if [[ "$1" == "mount" || "$1" == "create" || "$1" == "simple" ]]; then
   action="$1"
   shift
 fi
@@ -87,6 +87,27 @@ echo "Impermanence: ${impermanence}"
 echo "Swap size: ${swap_size}GB"
 echo "Hostname: ${hostname}"
 echo "Block devices: ${#devices[@]}"
+
+if [[ "$action" == "simple" ]]; then
+  local device=${devices[0]}
+  parted "$device" -- mklabel gpt
+  parted "$device" -- mkpart primary 512MB -8GB
+  parted "$device" -- mkpart primary linux-swap -8GB 100%
+  parted "$device" -- mkpart ESP fat32 1MB 512MB
+  parted "$device" -- set 3 esp on
+
+  mkfs.ext4 -L nixos "${device}1"
+  mkswap -L swap "${device}2"
+  mkfs.fat -F 32 -n boot "${device}3"
+
+  mount /dev/disk/by-label/nixos /mnt
+  mkdir -p /mnt/boot
+  mount /dev/disk/by-label/boot /mnt/boot
+
+  swapon "${device}2"
+
+  exit 0
+fi
 
 # How to name the partitions. This will be visible in 'gdisk -l /dev/disk' and
 # in /dev/disk/by-partlabel.
