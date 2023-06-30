@@ -52,29 +52,27 @@
       which-key-nvim
       editorconfig-nvim
     ];
-    extraConfig = ''
-      lua <<EOF
-        ${lib.strings.fileContents ./options.lua}
-        ${lib.strings.fileContents ./keymaps.lua}
+    extraLuaConfig = ''
+      ${lib.strings.fileContents ./options.lua}
+      ${lib.strings.fileContents ./keymaps.lua}
 
-        -- colorscheme --
-        require"nightfox".setup {
-          options = {
-            transparent = true,
-          },
-        }
-        vim.cmd("colorscheme nordfox")
+      -- colorscheme --
+      require"nightfox".setup {
+        options = {
+          transparent = true,
+        },
+      }
+      vim.cmd("colorscheme nordfox")
 
-        ${lib.strings.fileContents ./plugins/autopairs.lua}
-        ${lib.strings.fileContents ./plugins/bufferline.lua}
-        ${lib.strings.fileContents ./plugins/cmp.lua}
-        ${lib.strings.fileContents ./plugins/lualine.lua}
-        ${lib.strings.fileContents ./plugins/nvim-tree.lua}
-        ${lib.strings.fileContents ./plugins/telescope.lua}
-        ${lib.strings.fileContents ./plugins/toggleterm.lua}
-        ${lib.strings.fileContents ./plugins/treesitter.lua}
-        ${lib.strings.fileContents ./plugins/whichkey.lua}
-      EOF
+      ${lib.strings.fileContents ./plugins/autopairs.lua}
+      ${lib.strings.fileContents ./plugins/bufferline.lua}
+      ${lib.strings.fileContents ./plugins/cmp.lua}
+      ${lib.strings.fileContents ./plugins/lualine.lua}
+      ${lib.strings.fileContents ./plugins/nvim-tree.lua}
+      ${lib.strings.fileContents ./plugins/telescope.lua}
+      ${lib.strings.fileContents ./plugins/toggleterm.lua}
+      ${lib.strings.fileContents ./plugins/treesitter.lua}
+      ${lib.strings.fileContents ./plugins/whichkey.lua}
     '';
    };
 }
