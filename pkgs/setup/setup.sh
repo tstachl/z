@@ -202,9 +202,10 @@ function _create {
 
   # create an empty snap
   if [ $impermanence ]; then
-    zfs snapshot $(for i in "" "/usr" "/var"; do
-        printf '%s ' "${ZFS_ROOT}/${ZFS_ROOT_VOL}${i}@${EMPTYSNAP}";
-      done)
+    for i in "" "/usr" "/var"; do
+      zfs snapshot "${ZFS_ROOT}/${ZFS_ROOT_VOL}${i}@${EMPTYSNAP}"
+    done
+    unset i
   fi
 
   # create the efi partitions
