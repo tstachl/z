@@ -4,6 +4,7 @@
     ./hardware.nix
 
     ../common/global
+    ../common/optional/openssh.nix
     ../common/optional/podman.nix
 
     ../common/users/thomas.nix
