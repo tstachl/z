@@ -175,7 +175,7 @@ function _create {
 
   for (( i=0; i<${#devices[@]}; i++ )); do
     boot+=("/dev/disk/by-partlabel/${PART_BOOT}${i}")
-    root+=("/dev/disk/by-partlable/${PART_ROOT}${i}")
+    root+=("/dev/disk/by-partlabel/${PART_ROOT}${i}")
   done
 
   zpool "${boot[@]}"
