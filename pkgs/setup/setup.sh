@@ -157,7 +157,7 @@ function _create {
     -R /mnt)
 
   local boot=("${args[@]}")
-  boot+=(-O compatibility=grub2
+  boot+=(-o compatibility=grub2
     -O checksum=sha256
     -O compression=lz4
     -O devices=off
