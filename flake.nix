@@ -31,6 +31,7 @@
       in {
 
         packages = {
+
           nixosConfigurations = {
             vps = nixpkgs.lib.nixosSystem {
               inherit pkgs;
@@ -48,8 +49,8 @@
               modules = [ ./users/thomas ];
             };
           };
-        };
 
+        } // import ./pkgs { inherit pkgs; };
 
       });
 }
