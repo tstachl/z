@@ -56,8 +56,8 @@ shift $((OPTIND -1))
 
 # check if the first argument is an action
 if [[ "$1" == "mount" || "$1" == "create" ]]; then
-    action="$1"
-    shift
+  action="$1"
+  shift
 fi
 
 # validate required arguments
@@ -108,7 +108,7 @@ _partition() {
     # wipe flash-based storage device to improve
     # performance.
     # ALL DATA WILL BE LOST
-    # blkdiscard -f $i
+    blkdiscard -f "${devices[$i]}"
 
     sgdisk --zap-all "${devices[$i]}"
     sgdisk -a 1 -n 0:0:+100K -t 0:EF02 -c "0:${PART_MBR}${i}" "${devices[$i]}"
@@ -119,7 +119,7 @@ _partition() {
 
     sync && udevadm settle && sleep 2
 
-    if (( swap_size )); then
+    if [ "$swap_size" -gt "0" ]; then
       cryptsetup open --type plain --key-file /dev/random "${devices[$i]}4" "${PART_SWAP}${i}"
       mkswap "/dev/mapper/${PART_SWAP}${i}"
       swapon "/dev/mapper/${PART_SWAP}${i}"
@@ -151,8 +151,6 @@ function _create {
   else
     mirror="${ZFS_BOOT}"
   fi
-
-  echo "before create"
 
   # create the boot pool
   zpool create \
