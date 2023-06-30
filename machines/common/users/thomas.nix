@@ -23,5 +23,5 @@ in
     ];
   };
 
-  home-manager.users.thomas = import ../../../users/thomas.nix;
+  home-manager.users.thomas = import ../../../users/thomas;
 }
