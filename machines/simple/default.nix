@@ -5,7 +5,7 @@
 
     ../common/global
 
-    ../users/thomas.nix
+    ../common/users/thomas.nix
   ];
 
   networking.hostName = "simple";
