@@ -225,7 +225,7 @@ function _create {
 
 function main {
   if [ "$action" == "create" ]; then
-    _partition $devices
+    _partition "$devices"
     _create
   fi
   # _mount
