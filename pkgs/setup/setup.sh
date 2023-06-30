@@ -174,8 +174,10 @@ function _create {
     root+=("mirror")
   fi
 
-  boot+=("/dev/disk/by-partlabel/${PART_BOOT}*")
-  root+=("/dev/disk/by-partlabel/${PART_ROOT}*")
+  for (( i=0; i<${#devices[@]}; i++ )); do
+    boot+=("/dev/disk/by-partlabel/${PART_BOOT}${i}")
+    root+=("/dev/disk/by-partlabel/${PART_ROOT}${i}")
+  done
 
   zpool "${boot[@]}"
   zpool "${root[@]}"
