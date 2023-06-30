@@ -189,7 +189,7 @@ function _create {
 
   # create system datasets
   zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/home"
-  (( $impermanence )) && \
+  (( impermanence )) && \
     zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/persist" || true
   zfs create -o atime=off "${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix"
   zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/root"
