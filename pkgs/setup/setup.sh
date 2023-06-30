@@ -1,18 +1,6 @@
 #!/run/current-system/sw/bin/bash
 set -euo pipefail
 
-if [[ "$1" == "ssh" ]]; then
-  mkdir ~/.ssh && touch ~/.ssh/authorized_keys
-  curl https://github.com/tstachl.keys >> ~/.ssh/authorized_keys
-  ifconfig
-  exit 0
-fi
-
-if [[ $EUID -ne 0 ]]; then
-   echo -e "This script must be run as root"
-   exit 1
-fi
-
 # define usage function
 usage() {
   echo "Usage: $(basename "$0") [-h] [-i] [-s size] [ACTION] HOSTNAME DEVICE [DEVICE...]"
@@ -24,6 +12,22 @@ usage() {
   echo "  DEVICE: One or more block devices"
   exit 0
 }
+
+if [[ "${1-default}" == "default" ]]; then
+  usage
+fi
+
+if [[ "$1" == "ssh" ]]; then
+  mkdir ~/.ssh && touch ~/.ssh/authorized_keys
+  curl https://github.com/tstachl.keys >> ~/.ssh/authorized_keys
+  ifconfig
+  exit 0
+fi
+
+if [[ $EUID -ne 0 ]]; then
+   echo -e "This script must be run as root"
+   exit 1
+fi
 
 # define default values
 action=mount
@@ -95,34 +99,33 @@ PART_ROOT="${PART_ROOT:=rpool}"
 
 # partition the block devices
 _partition() {
-  local devices=$1
-  local i=0
+  local ii=0
 
-  for (( i=0; i<${#devices[@]}; i++ )); do
+  for i in $devices; do
     # wipe flash-based storage device to improve
     # performance.
     # ALL DATA WILL BE LOST
     # blkdiscard -f $i
 
-    sgdisk --zap-all "${devices[$i]}"
-    sgdisk -a 1 -n 0:0:+100K -t 0:EF02 -c "0:${PART_MBR}${i}" "${devices[$i]}"
-    sgdisk -n 0:1M:+1G -t 0:EFF00 -c "0:${PART_EFI}${i}" "${devices[$i]}"
-    sgdisk -n 0:0:+4G -t 0:BE00 -c "0:${PART_BOOT}${i}" "${devices[$i]}"
-    (( swap_size )) && sgdisk -n "0:0:+${swap_size}G" -t 0:8200 -c "0:${PART_SWAP}${i}" "${devices[$i]}"
-    sgdisk -n 0:0:0 -t 0:BF00 -c "0:${PART_ROOT}${i}" "${devices[$i]}"
+    sgdisk --zap-all "${i}"
+    sgdisk -a 1 -n 0:0:+100K -t 0:EF02 -c "0:${PART_MBR}${ii}" "${i}"
+    sgdisk -n 0:1M:+1G -t 0:EFF00 -c "0:${PART_EFI}${ii}" "${i}"
+    sgdisk -n 0:0:+4G -t 0:BE00 -c "0:${PART_BOOT}${ii}" "${i}"
+    (( swap_size )) && sgdisk -n "0:0:+${swap_size}G" -t 0:8200 -c "0:${PART_SWAP}${ii}" "${i}"
+    sgdisk -n 0:0:0 -t 0:BF00 -c "0:${PART_ROOT}${ii}" "${i}"
 
     sync && udevadm settle && sleep 2
 
     if (( swap_size )); then
-      cryptsetup open --type plain --key-file /dev/random "${devices[$i]}4" "${PART_SWAP}${i}"
-      mkswap "/dev/mapper/${PART_SWAP}${i}"
-      swapon "/dev/mapper/${PART_SWAP}${i}"
+      cryptsetup open --type plain --key-file /dev/random "${i}4" "${PART_SWAP}${ii}"
+      mkswap "/dev/mapper/${PART_SWAP}${ii}"
+      swapon "/dev/mapper/${PART_SWAP}${ii}"
     fi
 
-    (( i++ )) || true
+    (( ii++ )) || true
   done
 
-  unset i
+  unset i ii
 }
 
 # How to name the boot pool and root pool.
@@ -225,8 +228,8 @@ function _create {
 
 function main {
   if [ "$action" == "create" ]; then
-    _partition "$devices"
-    _create
+    _partition
+    # _create
   fi
   # _mount
 }
