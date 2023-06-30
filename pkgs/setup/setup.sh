@@ -150,22 +150,23 @@ function _create {
     -o autotrim=on
     -O acltype=posixacl
     -O canmount=off
+    -O mountpoint=none
     -O normalization=formD
     -O relatime=on
     -O xattr=sa
     -R /mnt)
 
   local boot=("${args[@]}")
-  boot+=(-o compatibility=grub2
+  boot+=(-O compatibility=grub2
+    -O checksum=sha256
     -O compression=lz4
     -O devices=off
-    -O mountpoint=/boot
     "${ZFS_BOOT}")
 
   local root=("${args[@]}")
   root+=(-O compression=zstd
+    -O checksum=edonr
     -O dnodesize=auto
-    -O mountpoint=/
     "${ZFS_ROOT}")
 
   if [ "${#devices[@]}" -gt "1" ]; then
@@ -173,51 +174,67 @@ function _create {
     root+=("mirror")
   fi
 
-  for (( i=0; i<${#devices[@]}; i++ )); do
-    boot+=("/dev/disk/by-partlabel/${PART_BOOT}${i}")
-    root+=("/dev/disk/by-partlabel/${PART_ROOT}${i}")
-  done
+  boot+=("/dev/disk/by-partlabel/${PART_BOOT}*")
+  root+=("/dev/disk/by-partlabel/${PART_ROOT}*")
 
   zpool "${boot[@]}"
   zpool "${root[@]}"
 
   unset args boot root
 
-  # create root system container - TODO: think about encryption
-  zfs create -o canmount=off -o mountpoint=none "${ZFS_ROOT}/${ZFS_ROOT_VOL}"
   # create boot container
-  zfs create -o mountpoint=none "${ZFS_BOOT}/${ZFS_ROOT_VOL}"
+  zfs create "${ZFS_BOOT}/${ZFS_ROOT_VOL}"
+  # create root system container - TODO: think about encryption
+  zfs create -o mountpoint=/ "${ZFS_ROOT}/${ZFS_ROOT_VOL}"
 
   # create system datasets
-  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/home"
-  zfs create -o mountpoint=legacy -o atime=off "${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix"
-  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/root"
-  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var"
-  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/lib"
-  zfs create -o mountpoint=legacy "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/log"
+  zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/home"
+  (( $impermanence )) && \
+    zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/persist" || true
+  zfs create -o atime=off "${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix"
+  zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/root"
+  zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var"
+  zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/lib"
+  zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/var/log"
 
   # create boot datasets
-  zfs create -o mountpoint=legacy "${ZFS_BOOT}/${ZFS_ROOT_VOL}/root"
+  zfs create -o mountpoint=/boot "${ZFS_BOOT}/${ZFS_ROOT_VOL}/boot"
 
   # create an empty snap
-  # (( impermanence )) && zfs snapshot "${ZFS_ROOT}/${ZFS_ROOT_VOL}@${EMPTYSNAP}"
+  if [ $impermanence ]; then
+    zfs snapshot $(for i in "" "/usr" "/var"; do
+        printf '%s ' "${ZFS_ROOT}/${ZFS_ROOT_VOL}${i}@${EMPTYSNAP}";
+      done)
+  fi
 
+  # create the efi partitions
+  local i=0
+  for (( i=0; i<${#devices[@]}; i++ )); do
+    mkfs.vfat -n EFI "/dev/disk/by-partlabel/${PART_EFI}${i}"
+  done
+  unset i
 }
 
-# function _mount {
-#   # Mount Everything
-#   mount -t tmpfs -o defaults,mode=755 none /mnt
-#
-#   [ ! -d "/mnt/nix" ] && mkdir /mnt/nix
-#   [ ! -d "/mnt/persist" ] && mkdir /mnt/persist
-#
-#   zpool import -fd "/dev/disk/by-label/$hostname" "$hostname"
-#   mount -t zfs "${hostname}/nix" /mnt/nix
-#   mount -t zfs "${hostname}/persist" /mnt/persist
-#
-#   [ ! -d "/mnt/boot" ] && mkdir /mnt/boot
-#   mount /dev/disk/by-label/boot /mnt/boot
-# }
+function _mount {
+  # mount efis
+  local i=0
+  for (( i=0; i<${#devices[@]}; i++ )); do
+    mkdir -p /mnt/boot/efis/${PART_EFI}${i}
+    mount -t vfat /dev/disk/by-partlabel/${PART_EFI}${i} /mnt/boot/efis/${PART_EFI}${i}
+  done
+  unset i
+
+  # mount first efi into efi
+  mkdir /mnt/boot/efi
+  mount -t vfat "/dev/disk/by-partlabel/${PART_EFI}0" /mnt/boot/efi
+
+  # make sure we won't trip over zpool.cache later
+  mkdir -p /mnt/etc/zfs/
+  rm -f /mnt/etc/zfs/zpool.cache
+  touch /mnt/etc/zfs/zpool.cache
+  chmod a-w /mnt/etc/zfs/zpool.cache
+  chattr +i /mnt/etc/zfs/zpool.cache
+}
 
 function main {
   if [ "$action" == "create" ]; then
