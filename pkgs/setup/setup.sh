@@ -82,7 +82,8 @@ unset device
 
 # set variables from arguments
 hostname=$1
-devices=( ${*:2} )
+IFS=" " read -r -a devices <<< "${*:2}"
+# devices=( ${*:2} )
 
 # output selected options and arguments
 echo "Action: ${action}"
