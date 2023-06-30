@@ -32,11 +32,11 @@
 
         packages = {
           nixosConfigurations = {
-            vps = nixpkgs.lib.nixosConfiguration {
+            vps = nixpkgs.lib.nixosSystem {
               inherit pkgs;
               specialArgs = { inherit inputs; inherit (self) outputs; };
 
-              modules = [ ./hosts/vps ];
+              modules = [ ./machines/vps ];
             };
           };
 
