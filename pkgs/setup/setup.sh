@@ -145,42 +145,41 @@ ROOTPW="${ROOTPW:-}"
 EMPTYSNAP="${EMPTYSNAP:-EMPTY}"
 
 function _create {
+  local args=(create
+    -o ashift=12
+    -o autotrim=on
+    -O acltype=posixacl
+    -O canmount=off
+    -O normalization=formD
+    -O relatime=on
+    -O xattr=sa
+    -R /mnt)
+
+  local boot=("${args[@]}")
+  boot+=(-o compatibility=grub2
+    -O compression=lz4
+    -O devices=off
+    -O mountpoint=/boot
+    "${ZFS_BOOT}")
+
+  local root=("${args[@]}")
+  root+=(-O compression=zstd
+    -O dnodesize=auto
+    -O mountpoint=/
+    "${ZFS_ROOT}")
+
+  if [ "${#devices[@]}" -gt "1" ]; then
+    boot+=("mirror")
+    root+=("mirror")
+  fi
+
   for (( i=0; i<${#devices[@]}; i++ )); do
-    local args=(create
-      -o ashift=12
-      -o autotrim=on
-      -O acltype=posixacl
-      -O canmount=off
-      -O normalization=formD
-      -O relatime=on
-      -O xattr=sa
-      -R /mnt)
-
-    # BOOT
-    local boot=("${args[@]}")
-    boot+=(-o compatibility=grub2
-      -O compression=lz4
-      -O devices=off
-      -O mountpoint=/boot
-      "${ZFS_BOOT}")
-
-    local root=("${args[@]}")
-    root+=(-O compression=zstd
-      -O dnodesize=auto
-      -O mountpoint=/
-      "${ZFS_ROOT}")
-
-    if [ "${#devices[@]}" -gt "1" ]; then
-      boot+=("mirror")
-      root+=("mirror")
-    fi
-
     boot+=("/dev/disk/by-partlabel/${PART_BOOT}${i}")
     root+=("/dev/disk/by-partlable/${PART_ROOT}${i}")
-
-    zpool "${boot[@]}"
-    zpool "${root[@]}"
   done
+
+  zpool "${boot[@]}"
+  zpool "${root[@]}"
 
   unset args boot root
 
@@ -222,7 +221,7 @@ function _create {
 
 function main {
   if [ "$action" == "create" ]; then
-    _partition
+    # _partition
     _create
   fi
   # _mount
