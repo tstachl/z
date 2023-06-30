@@ -10,7 +10,6 @@ in
   users.mutableUsers = false;
   users.users.thomas = {
     isNormalUser = true;
-    shell = pkgs.fish;
 
     initialHashedPassword = "$5$9cvVp5fWIkb/mXhs$y0yfnlqedfUkxBGxrk8Kc6ppuLDo2UU9ozErYLPDlo/";
 
