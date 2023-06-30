@@ -238,10 +238,10 @@ function _mount {
 
 function main {
   if [ "$action" == "create" ]; then
-    # _partition
+    _partition
     _create
   fi
-  # _mount
+  _mount
 }
 
 main
