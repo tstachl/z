@@ -83,7 +83,6 @@ unset device
 # set variables from arguments
 hostname=$1
 IFS=" " read -r -a devices <<< "${*:2}"
-# devices=( ${*:2} )
 
 # output selected options and arguments
 echo "Action: ${action}"
@@ -146,48 +145,44 @@ ROOTPW="${ROOTPW:-}"
 EMPTYSNAP="${EMPTYSNAP:-EMPTY}"
 
 function _create {
-  if [ "${#devices[@]}" -gt "1" ]; then
-    mirror="${ZFS_BOOT} mirror"
-  else
-    mirror="${ZFS_BOOT}"
-  fi
+  for (( i=0; i<${#devices[@]}; i++ )); do
+    local args=(create
+      -o ashift=12
+      -o autotrim=on
+      -O acltype=posixacl
+      -O canmount=off
+      -O normalization=formD
+      -O relatime=on
+      -O xattr=sa
+      -R /mnt)
 
-  # create the boot pool
-  zpool create \
-    -o compatibility=grub2 \
-    -o ashift=12 \
-    -o autotrim=on \
-    -O acltype=posixacl \
-    -O canmount=off \
-    -O compression=lz4 \
-    -O devices=off \
-    -O normalization=formD \
-    -O relatime=on \
-    -O xattr=sa \
-    -O mountpoint=/boot \
-    -R /mnt \
-    "${mirror}" "/dev/disk/by-partlabel/${PART_BOOT}*"
+    # BOOT
+    local boot=("${args[@]}")
+    boot+=(-o compatibility=grub2
+      -O compression=lz4
+      -O devices=off
+      -O mountpoint=/boot
+      "${ZFS_BOOT}")
 
-  echo "after create boot"
+    local root=("${args[@]}")
+    root+=(-O compression=zstd
+      -O dnodesize=auto
+      -O mountpoint=/
+      "${ZFS_ROOT}")
 
-  # create the root pool
-  zpool create \
-    -o ashift=12 \
-    -o autotrim=on \
-    -O acltype=posixacl \
-    -O canmount=off \
-    -O compression=zstd \
-    -O dnodesize=auto \
-    -O normalization=formD \
-    -O relatime=on \
-    -O xattr=sa \
-    -O mountpoint=/ \
-    -R /mnt \
-    "${mirror}" "/dev/disk/by-partlabel/${PART_ROOT}*"
+    if [ "${#devices[@]}" -gt "1" ]; then
+      boot+=("mirror")
+      root+=("mirror")
+    fi
 
-  echo "after create root"
+    boot+=("/dev/disk/by-partlabel/${PART_BOOT}${i}")
+    root+=("/dev/disk/by-partlable/${PART_ROOT}${i}")
 
-  unset mirror
+    zpool "${boot[@]}"
+    zpool "${root[@]}"
+  done
+
+  unset args boot root
 
   # create root system container - TODO: think about encryption
   zfs create -o canmount=off -o mountpoint=none "${ZFS_ROOT}/${ZFS_ROOT_VOL}"
