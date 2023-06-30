@@ -5,8 +5,6 @@ let
   ifExists = groups: builtins.filter (
     group: builtins.hasAttr group config.users.groups
   ) groups;
-
-  hasPersistence = builtins.hasAttr "persistence" config.environment;
 in
 {
   users.mutableUsers = false;
@@ -26,18 +24,4 @@ in
   };
 
   home-manager.users.thomas = import ../../../users/thomas.nix;
-
-  environment = lib.mkIf hasPersistence {
-    persistence."/persist".users.thomas = {
-      directories = [
-        "Workspace"
-        ".config/BraveSoftware"
-      ];
-
-      files = [
-        ".config/monitors.xml"
-        ".config/gh/hosts.yml"
-      ];
-    };
-  };
 }
