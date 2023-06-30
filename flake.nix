@@ -20,6 +20,7 @@
 
       {
         homeManagerModules = {};
+        nixosModules = {};
       }
 
       //

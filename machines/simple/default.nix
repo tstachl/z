@@ -2,6 +2,8 @@
 {
   imports = [
     ./hardware.nix
+
+    ../common/global
   ];
 
   networking.hostName = "simple";
