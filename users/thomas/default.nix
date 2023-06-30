@@ -12,7 +12,7 @@ in
   ] ++ (builtins.attrValues outputs.homeManagerModules);
 
   nix = {
-    package = pkgs.nixFlakes;
+    package = lib.mkDefault pkgs.nixFlakes;
 
     settings = {
       experimental-features = [ "nix-command" "flakes" "repl-flake" ];
