@@ -201,3 +201,4 @@ which_key.register({
   noremap = true, -- use `noremap` when creating keymaps
   nowait = true, -- use `nowait` when creating keymaps
 })
+
