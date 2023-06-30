@@ -11,7 +11,7 @@ in
   users.users.thomas = {
     isNormalUser = true;
 
-    initialHashedPassword = "$5$9cvVp5fWIkb/mXhs$y0yfnlqedfUkxBGxrk8Kc6ppuLDo2UU9ozErYLPDlo/";
+    hashedPassword = "$6$VkirZYh8XqSnzIq4$O4S5ZwNAx6AlOVeCTvthRCRAh6sKdyjs.GhcuP3SMrv95cbXixSUktRIr7GZyZmZEsZMiHVFZcthYgfxlMp0b0";
 
     extraGroups = [ "wheel" "video" "audio" ] ++ ifExists [
       "network" "wireshark" "i2c" "docker" "podman" "git" "libvirtd" "keys"
