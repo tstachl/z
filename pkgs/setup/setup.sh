@@ -89,7 +89,7 @@ echo "Action: ${action}"
 echo "Impermanence: ${impermanence}"
 echo "Swap size: ${swap_size}GB"
 echo "Hostname: ${hostname}"
-echo "Block devices: ${devices}"
+echo "Block devices: ${#devices[@]}"
 
 # How to name the partitions. This will be visible in 'gdisk -l /dev/disk' and
 # in /dev/disk/by-partlabel.
