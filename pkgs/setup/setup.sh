@@ -188,7 +188,7 @@ function _create {
 
   # create system datasets
   zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/home"
-  if [ $impermanence ]; then
+  if [[ $impermanence ]]; then
     zfs create "${ZFS_ROOT}/${ZFS_ROOT_VOL}/persist"
   fi
   zfs create -o atime=off "${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix"
@@ -201,7 +201,7 @@ function _create {
   zfs create -o mountpoint=/boot "${ZFS_BOOT}/${ZFS_ROOT_VOL}/boot"
 
   # create an empty snap
-  if [ $impermanence ]; then
+  if [[ $impermanence ]]; then
     for i in "" "/usr" "/var"; do
       zfs snapshot "${ZFS_ROOT}/${ZFS_ROOT_VOL}${i}@${EMPTYSNAP}"
     done
