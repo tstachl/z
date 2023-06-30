@@ -30,15 +30,26 @@
         pkgs = import nixpkgs { inherit overlays system; };
       in {
 
-        packages.homeConfigurations = {
+        packages = {
+          nixosConfigurations = {
+            vps = nixpkgs.lib.nixosConfiguration {
+              inherit pkgs;
+              specialArgs = { inherit inputs; inherit (self) outputs; };
 
-          thomas = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            extraSpecialArgs = { inherit inputs; inherit (self) outputs; };
-
-            modules = [ ./users/thomas ];
+              modules = [ ./hosts/vps ];
+            };
           };
 
+          homeConfigurations = {
+            thomas = home-manager.lib.homeManagerConfiguration {
+              inherit pkgs;
+              specialArgs = { inherit inputs; inherit (self) outputs; };
+
+              modules = [ ./users/thomas ];
+            };
+          };
         };
+
+
       });
 }
