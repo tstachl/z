@@ -219,8 +219,9 @@ function _mount {
   # mount efis
   local i=0
   for (( i=0; i<${#devices[@]}; i++ )); do
-    mkdir -p /mnt/boot/efis/${PART_EFI}${i}
-    mount -t vfat /dev/disk/by-partlabel/${PART_EFI}${i} /mnt/boot/efis/${PART_EFI}${i}
+    mkdir -p "/mnt/boot/efis/${PART_EFI}${i}"
+    mount -t vfat "/dev/disk/by-partlabel/${PART_EFI}${i}" \
+      "/mnt/boot/efis/${PART_EFI}${i}"
   done
   unset i
 
