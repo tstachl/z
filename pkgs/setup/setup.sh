@@ -89,7 +89,7 @@ echo "Hostname: ${hostname}"
 echo "Block devices: ${#devices[@]}"
 
 if [[ "$action" == "simple" ]]; then
-  local device=${devices[0]}
+  device=${devices[0]}
   parted "$device" -- mklabel gpt
   parted "$device" -- mkpart primary 512MB -8GB
   parted "$device" -- mkpart primary linux-swap -8GB 100%
