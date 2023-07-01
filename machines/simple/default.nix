@@ -8,7 +8,7 @@
     ../common/optional/openssh.nix
     ../common/optional/podman.nix
 
-    ../common/users/thomas.nix
+    ../common/users/thomas
   ];
 
   networking.hostName = "simple";
