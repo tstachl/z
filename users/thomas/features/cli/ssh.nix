@@ -3,10 +3,6 @@ let
   inherit (config.programs.gpg) homedir;
 in
 {
-  home.sessionVariables = {
-    SSH_AUTH_SOCK = "${config.xdg.configHome}/gnupg/S.gpg-agent.ssh";
-  };
-
   programs.ssh = {
     enable = true;
     compression = true;
