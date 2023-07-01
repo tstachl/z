@@ -28,11 +28,6 @@ in
   };
 
   manual.manpages.enable = false;
-
-  programs = {
-    bash.enable = true;
-  };
-
   xdg.enable = true;
 
   home = {
