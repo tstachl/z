@@ -2,6 +2,7 @@
   imports = [
     # ./abduco.nix
     # ./backup.nix
+    ./bash.nix
     ./bat.nix
     ./direnv.nix
     ./fish.nix
