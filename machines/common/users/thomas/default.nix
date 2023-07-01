@@ -7,9 +7,11 @@ let
   ) groups;
 in
 {
-  users.mutableUsers = false;
+  programs.fish.enable = true;
+
   users.users.thomas = {
     isNormalUser = true;
+    shell = pkgs.fish;
 
     hashedPassword = "$6$VkirZYh8XqSnzIq4$O4S5ZwNAx6AlOVeCTvthRCRAh6sKdyjs.GhcuP3SMrv95cbXixSUktRIr7GZyZmZEsZMiHVFZcthYgfxlMp0b0";
 
@@ -22,5 +24,5 @@ in
     ];
   };
 
-  home-manager.users.thomas = import ../../../users/thomas;
+  home-manager.users.thomas = import ../../../../users/thomas;
 }
