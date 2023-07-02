@@ -12,7 +12,6 @@
     ../common/optional/yabai.nix
 
     ../common/users/thomas
-    ../common/users/thomas/yubikey.nix
   ];
 
   environment.systemPackages = with pkgs; [
