@@ -1,5 +1,6 @@
 {
   imports = [
+    ./alacritty.nix
     # ./abduco.nix
     # ./backup.nix
     ./bash.nix

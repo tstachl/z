@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   programs.alacritty = {
+    enabled = true;
+
     settings = {
       env = {
         LC_ALL = "en_US.UTF-8";
