@@ -14,5 +14,6 @@
     # ./rbw.nix
     ./ssh.nix
     ./starship.nix
+    ./yubikey.nix
   ];
 }
