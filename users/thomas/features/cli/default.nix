@@ -6,6 +6,7 @@
     ./bat.nix
     ./direnv.nix
     ./fish.nix
+    ./fonts.nix
     ./git.nix
     ./github.nix
     ./gnupg.nix

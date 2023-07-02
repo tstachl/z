@@ -3,6 +3,7 @@
   imports = [
     ../common/global
 
+    ../common/optional/alacritty.nix
     ../common/optional/darwin.nix
     ../common/optional/gnupg.nix
     # ../common/optional/openssh.nix
@@ -11,6 +12,7 @@
     ../common/optional/yabai.nix
 
     ../common/users/thomas
+    ../common/users/thomas/yubikey.nix
   ];
 
   environment.systemPackages = with pkgs; [
