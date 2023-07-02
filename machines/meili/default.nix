@@ -3,7 +3,6 @@
   imports = [
     ../common/global
 
-    ../common/optional/alacritty.nix
     ../common/optional/darwin.nix
     ../common/optional/gnupg.nix
     # ../common/optional/openssh.nix
@@ -20,6 +19,7 @@
 
   homebrew = {
     casks = [
+      "alacritty"
       "brave-browser"
       "deepl"
       "keepassxc"
