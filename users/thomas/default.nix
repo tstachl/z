@@ -6,6 +6,7 @@ in
 {
   imports = [
     ./features/cli
+    ./features/desktop
     ./features/nvim
 
     inputs.nur.hmModules.nur
