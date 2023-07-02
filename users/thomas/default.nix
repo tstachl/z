@@ -36,5 +36,5 @@ in
     stateVersion = lib.mkDefault "23.05";
   };
 
-  # home.sessionVariables = { SHELL = pkgs.fish + "/bin/fish"; };
+  home.sessionVariables = { SHELL = "${pkgs.fish}/bin/fish"; };
 }
