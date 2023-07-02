@@ -25,6 +25,8 @@
       editorconfig-nvim
     ];
     extraLuaConfig = ''
+      vim.cmd("set secure exrc")
+
       ${lib.strings.fileContents ./options.lua}
       ${lib.strings.fileContents ./keymaps.lua}
 
