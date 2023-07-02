@@ -1,7 +1,5 @@
-{ pkgs, outputs, lib, config, ... }:
+{ pkgs, lib, config, ... }:
 {
-  imports = (builtins.attrValues outputs.nixosModules);
-
   nix = {
     settings = {
       substituters = [
@@ -33,6 +31,7 @@
 
     # Map registries to channels
     # Very useful when using legacy commands
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
+      config.nix.registry;
   };
 }

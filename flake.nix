@@ -19,8 +19,9 @@
     }@inputs:
 
       {
-        homeManagerModules = {};
         nixosModules = {};
+        darwinModules = {};
+        homeManagerModules = {};
       }
 
       //
@@ -28,7 +29,11 @@
       flake-utils.lib.eachDefaultSystem (system:
       let
         overlays = [];
-        pkgs = import nixpkgs { inherit overlays system; };
+        pkgs = import nixpkgs {
+          inherit overlays system;
+          config.allowUnfree = true;
+          config.allowUnsupportedSystem = true;
+        };
       in {
 
         packages = {
@@ -39,6 +44,14 @@
               specialArgs = { inherit inputs; inherit (self) outputs; };
 
               modules = [ ./machines/simple ];
+            };
+          };
+
+          darwinConfigurations = {
+            meili = darwin.lib.darwinSystem {
+              inherit pkgs;
+              specialArgs = { inherit inputs; inherit (self) outputs; };
+              modules = [ ./machines/meili ];
             };
           };
 

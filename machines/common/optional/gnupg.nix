@@ -1,11 +1,6 @@
-{ ... }:
+{ pkgs, ... }:
 {
-  # programs.gnupg.agent.enable = true;
+  programs.gnupg.agent.enable = true;
 
-  # systemd.user.sockets.gpg-agent = {
-  #   listenStreams = [
-  #     "" # unset
-  #     "%h/.config/gnupg/S.gpg-agent"
-  #   ];
-  # };
+  environment.systemPackages = with pkgs; [ gnupg pinentry ];
 }
