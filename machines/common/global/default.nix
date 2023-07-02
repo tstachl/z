@@ -13,11 +13,11 @@
 
   environment = {
     # add terminfo files
-    enableAllTerminfo = true;
+    # enableAllTerminfo = true;
 
     # add important packages
     systemPackages = with pkgs; [
-      git parted
+      git # parted TODO: fix for darwin nixos
     ];
   };
 }

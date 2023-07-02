@@ -25,7 +25,7 @@
 
     gc = {
       automatic = true;
-      dates = "weekly";
+      # dates = "weekly"; TODO: this doesn't work on darwin
       options = "--delete-older-than 7d";
     };
 
