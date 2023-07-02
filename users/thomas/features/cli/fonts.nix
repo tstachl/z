@@ -1,8 +1,7 @@
 { pkgs, ... }:
 {
-  fonts.fontconfig.enable = true;
-
-  home.packages = with pkgs; [
+  fonts.fontDir.enable = true;
+  fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
     liberation_ttf
   ];
