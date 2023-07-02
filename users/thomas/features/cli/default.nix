@@ -1,7 +1,5 @@
 {
   imports = [
-    # ./abduco.nix
-    # ./backup.nix
     ./bash.nix
     ./bat.nix
     ./direnv.nix
@@ -9,8 +7,6 @@
     ./git.nix
     ./github.nix
     ./gnupg.nix
-    # ./pass.nix
-    # ./rbw.nix
     ./ssh.nix
     ./starship.nix
     ./zsh.nix
