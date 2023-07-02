@@ -35,6 +35,4 @@ in
     homeDirectory = lib.mkDefault "${homeLocation}/${config.home.username}";
     stateVersion = lib.mkDefault "23.05";
   };
-
-  home.sessionVariables = { SHELL = "${pkgs.fish}/bin/fish"; };
 }
