@@ -12,6 +12,7 @@
     ../common/optional/yabai.nix
 
     ../common/users/thomas
+    ../common/users/thomas/desktop.nix
   ];
 
   homebrew = {

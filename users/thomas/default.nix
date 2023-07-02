@@ -5,9 +5,9 @@ let
 in
 {
   imports = [
-    ./features/cli
-    ./features/desktop
-    ./features/nvim
+    ./cli
+    ./desktop
+    ./nvim
 
     inputs.nur.hmModules.nur
   ] ++ (builtins.attrValues outputs.homeManagerModules);
