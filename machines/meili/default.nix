@@ -41,6 +41,12 @@
     onActivation.upgrade = true;
   };
 
+  fonts.fontDir.enable = true;
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+    liberation_ttf
+  ];
+
   networking.hostName = "meili";
   networking.remoteLogin = true;
   time.timeZone = "Europe/Vienna";
