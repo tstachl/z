@@ -2,13 +2,7 @@
 {
   programs.fish = {
     enable = true;
-
-    shellAliases = {
-      g = "git";
-      "..." = "cd ../..";
-      "...." = "cd ../../..";
-      snrs = "sudo nixos-rebuild switch --flake .#$(hostname)";
-    };
+    shellAliases = import ./shell-aliases.nix;
 
     interactiveShellInit = lib.mkAfter ''
       function repos -d "Jump to the Workspace directory"
