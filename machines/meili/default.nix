@@ -4,6 +4,7 @@
     ../common/global
 
     ../common/optional/darwin.nix
+    ../common/optional/fonts.nix
     ../common/optional/gnupg.nix
     # ../common/optional/openssh.nix
     # ../common/optional/podman.nix # TODO: we need a module for this
@@ -11,10 +12,6 @@
     ../common/optional/yabai.nix
 
     ../common/users/thomas
-  ];
-
-  environment.systemPackages = with pkgs; [
-    # podman
   ];
 
   homebrew = {
@@ -40,12 +37,6 @@
     onActivation.cleanup = "zap";
     onActivation.upgrade = true;
   };
-
-  fonts.fontDir.enable = true;
-  fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
-    liberation_ttf
-  ];
 
   networking.hostName = "meili";
   networking.remoteLogin = true;
