@@ -38,6 +38,22 @@ setup hermod
 #### Meili
 My Macbook configuration
 
+##### Prerequisites
+* Apple Store Login
+* Homebrew installed
+* Xcode Command Line Tools installed
+* Terminal needs Full Disk Access
+
+##### Install
+
+```sh
+mkdir -p workspace/tstachl && cd workspace/tstachl
+git clone https://github.com/tstachl/z
+cd ./z
+nix --experimental-features "nix-command flakes" build .#darwinConfigurations.meili.system
+./result/sw/bin/darwin-rebuild switch --flake .#meili
+```
+
 #### Odin
 My RaspberryPi in Austria
 
