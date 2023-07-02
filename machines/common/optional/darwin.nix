@@ -1,9 +1,8 @@
 { inputs, outputs, ... }:
 {
   imports = [
-    outputs.darwinModules
     inputs.home-manager.darwinModules.home-manager
-  ];
+  ] ++ (builtins.attrValues outputs.darwinModules);
 
   services.nix-daemon.enable = true;
   programs.nix-index.enable = true;
