@@ -56,16 +56,6 @@
         autoLoginUser = null;
       };
 
-      trackpad = {
-        ActuationStrength = 0;
-        Clicking = null;
-        Dragging = null;
-        FirstClickThreshold = 1;
-        SecondClickThreshold = 1;
-        TrackpadRightClick = null;
-        TrackpadThreeFingerDrag = null;
-      };
-
       NSGlobalDomain = {
         AppleInterfaceStyle = "Dark";
         NSDocumentSaveNewDocumentsToCloud = false;
@@ -78,7 +68,12 @@
       screencapture.location = "/tmp";
 
       trackpad = {
+        ActuationStrength = 0;
         Clicking = true;
+        Dragging = null;
+        FirstClickThreshold = 1;
+        SecondClickThreshold = 1;
+        TrackpadRightClick = null;
         TrackpadThreeFingerDrag = true;
       };
     };
