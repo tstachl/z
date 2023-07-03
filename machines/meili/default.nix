@@ -17,7 +17,7 @@
 
   homebrew = {
     casks = [
-      # "alacritty"
+      "alacritty"
       "brave-browser"
       "deepl"
       "keepassxc"
