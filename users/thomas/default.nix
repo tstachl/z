@@ -1,4 +1,4 @@
-{ pkgs, lib, config, inputs, outputs, ... }:
+{ pkgs, lib, config, outputs, ... }:
 let
   homeLocation = with pkgs.stdenv.hostPlatform;
     if isDarwin then "/Users" else "/home";
@@ -7,8 +7,6 @@ in
   imports = [
     ./cli
     ./nvim
-
-    inputs.nur.hmModules.nur
   ] ++ (builtins.attrValues outputs.homeManagerModules);
 
   nix = {

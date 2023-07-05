@@ -5,6 +5,7 @@ in
 {
   home.sessionVariables = {
     GNUPGHOME = "${configHome}/gnupg";
+    SSH_AUTH_SOCK = "${configHome}/gnupg/S.gpg-agent.ssh";
   };
 
   programs.gpg = {

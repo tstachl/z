@@ -1,7 +1,3 @@
-{ config, ... }:
-let
-  inherit (config.programs.gpg) homedir;
-in
 {
   programs.ssh = {
     enable = true;
