@@ -7,7 +7,7 @@
     ../common/optional/fonts.nix
     ../common/optional/gnupg.nix
     # ../common/optional/openssh.nix
-    # ../common/optional/podman.nix # TODO: we need a module for this
+    ../common/optional/podman.nix # TODO: we need a module for this
     ../common/optional/skhd.nix
     ../common/optional/yabai.nix
 
