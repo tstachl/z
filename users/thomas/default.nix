@@ -31,6 +31,10 @@ in
   home = {
     username = lib.mkDefault "thomas";
     homeDirectory = lib.mkDefault "${homeLocation}/${config.home.username}";
+    sessionVariables = {
+      EDITOR = "${pkgs.nvim}/bin/nvim";
+      SHELL = "${pkgs.fish}/bin/fish";
+    };
     stateVersion = lib.mkDefault "23.05";
   };
 }
