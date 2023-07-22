@@ -32,7 +32,7 @@ in
     username = lib.mkDefault "thomas";
     homeDirectory = lib.mkDefault "${homeLocation}/${config.home.username}";
     sessionVariables = {
-      EDITOR = "${pkgs.nvim}/bin/nvim";
+      EDITOR = "${pkgs.neovim}/bin/nvim";
       SHELL = "${pkgs.fish}/bin/fish";
     };
     stateVersion = lib.mkDefault "23.05";
