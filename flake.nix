@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     flake-utils.url = "github:numtide/flake-utils";
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -13,6 +14,7 @@
   outputs =
     { self
     , nixpkgs
+    , nixos-hardware
     , darwin
     , home-manager
     , flake-utils
@@ -44,6 +46,16 @@
               specialArgs = { inherit inputs; inherit (self) outputs; };
 
               modules = [ ./machines/simple ];
+            };
+
+            sting = nixpkgs.lib.nixosSystem {
+              inherit pkgs;
+              specialArgs = { inherit inputs; inherit (self) outputs; };
+
+              modules = [ ./machines/sting ];
+              # get all the apps for sting and load them as modules
+              # modules = map (file: "${./modules/sting}/${file}")
+              #   (builtins.attrNames (builtins.readDir ./modules/sting));
             };
           };
 
