@@ -7,6 +7,7 @@ require'nvim-treesitter.configs'.setup {
   },
   highlight = {
     enable = true,
+    disable = { "bash" }, -- TODO: periodically check if bash is working again
     additional_vim_regex_highlighting = true,
   },
   indent = { enable = true, disable = { "yaml" } },
