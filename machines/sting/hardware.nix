@@ -4,8 +4,7 @@ with lib;
 
 {
   imports = [
-    "${toString modulesPath}/installer/sd-card/sd-image-aarch64.nix"
-    inputs.nixos-hardware.nixosModules.raspberry-pi-4
+    # inputs.nixos-hardware.nixosModules.raspberry-pi-4
   ];
 
   boot = {
