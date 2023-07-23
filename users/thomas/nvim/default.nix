@@ -1,5 +1,7 @@
 { pkgs, lib, ... }:
 {
+  home.packages = [ pkgs.ripgrep pkgs.zig ];
+
   programs.neovim = {
     enable = true;
     vimAlias = true;
