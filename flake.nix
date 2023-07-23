@@ -30,7 +30,13 @@
 
       flake-utils.lib.eachDefaultSystem (system:
       let
-        overlays = [];
+        overlays = [
+          # Needed to make building the SD Card for Raspi work
+          (final: super: {
+            makeModulesClosure = x:
+              super.makeModulesClosure (x // { allowMissing = true; });
+          })
+        ];
         pkgs = import nixpkgs {
           inherit overlays system;
           config.allowUnfree = true;
