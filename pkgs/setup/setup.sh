@@ -37,6 +37,7 @@ IFS=" " read -r -a devices <<< "${*:2}"
 # define default values
 last_column=$(gdisk -l "${devices[0]}" | awk -F "[, ]+" 'END{print $NF}')
 swap_size=$(free -gh | awk -F "[, ]+" '/Mem/{printf("%.0f",$2)}')
+sd_device=$(lsblk | awk 'NR==3 {print $1}' | sed 's/[^a-zA-Z0-9_:]//g')
 
 # output selected options and arguments
 echo "Swap size: ${swap_size}GB"
@@ -81,27 +82,25 @@ function _create {
     -O normalization=formD \
     -o autotrim=on \
     -O canmount=off \
-    -o realtime=on \
     -O checksum=edonr \
     rpool "${device}3"
 
-  zfs create "rpool/local/root"
-  zfs create -o atime=off "rpool/local/nix"
-  zfs create "rpool/safe/persist"
+  zfs create rpool/root
+  zfs create -o atime=off rpool/nix
+  zfs create rpool/persist
 
-  zfs snapshot "rpool/local/root@blank"
+  zfs snapshot rpool/root@blank
 
   mkfs.fat -F 32 -n boot "${device}1"
 }
 
 function _mount {
   # mount zfs
-  mkdir -p /mnt
-  mount -t zfs rpool/local/root /mnt
+  mount -t zfs -o zfsutil rpool/root /mnt
   mkdir -p /mnt/nix
-  mount -t zfs rpool/local/nix /mnt/nix
+  mount -t zfs -o zfsutil rpool/nix /mnt/nix
   mkdir -p /mnt/persist
-  mount -t zfs rpool/safe/persist /mnt/persist
+  mount -t zfs -o zfsutil rpool/persist /mnt/persist
 
   # mount boot
   mkdir -p /mnt/boot
@@ -110,8 +109,8 @@ function _mount {
 
 function _uefi_setup {
   # only works on raspi sd card
-  mkdir /firmware
-  mount "/dev/$(lsblk | awk 'NR==3 {print $1}' | sed 's/[^a-zA-Z0-9_:]//g')" /firmware
+  [-d /firmware ] || mkdir /firmware
+  mount "/dev/${sd_device}" /firmware
   rm -rf /mnt/boot/*
   cp /firmware/* /mnt/boot
 }
