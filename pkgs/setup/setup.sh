@@ -12,7 +12,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # define default values
-action=mount
+action=create
 swap_size=$(free -gh | awk -F "[, ]+" '/Mem/{printf(fmt,$2)}' fmt="%'1.2f")
 
 # validate required arguments
@@ -121,8 +121,8 @@ function _uefi_setup {
 
 function main {
   if [[ "$action" == "create" ]]; then
-    _partition ${devices[0]}
-    _create ${devices[0]}
+    _partition "${devices[0]}"
+    _create "${devices[0]}"
   fi
 
   _mount
