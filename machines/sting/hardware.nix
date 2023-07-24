@@ -17,11 +17,7 @@ with lib;
       "cma=128M"
     ];
 
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot.enable = true;
-    };
-
+    loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = [ "zfs" ];
     consoleLogLevel = 7;
   };
