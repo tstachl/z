@@ -58,13 +58,7 @@
               inherit pkgs;
               specialArgs = { inherit inputs; inherit (self) outputs; };
 
-              modules = [
-                "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
-                ./machines/sting
-              ];
-              # inherit pkgs;
-
-              # modules = [ ./machines/sting ];
+              modules = [ ./machines/sting ];
               # get all the apps for sting and load them as modules
               # modules = map (file: "${./modules/sting}/${file}")
               #   (builtins.attrNames (builtins.readDir ./modules/sting));

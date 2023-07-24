@@ -4,16 +4,12 @@ with lib;
 
 {
   imports = [
-    # inputs.nixos-hardware.nixosModules.raspberry-pi-4
+    inputs.nixos-hardware.nixosModules.raspberry-pi-4
   ];
 
   boot = {
-    initrd = {
-      availableKernelModules = [ "xhci_pci" "usbhid" "uas" "usb_storage" ];
-      kernelModules = [ ];
-    };
+    initrd.availableKernelModules = [ "xhci_pci" "uas" ];
 
-    kernelPackages = mkForce pkgs.linuxPackages_rpi4;
     kernelParams = [
       "8250.nr_uarts=1"
       "console=ttyAMA0,115200"
@@ -21,29 +17,43 @@ with lib;
       "cma=128M"
     ];
 
-    kernelModules = [ ];
-    extraModulePackages = [ ];
-
     loader = {
-      grub.enable = false;
-      generic-extlinux-compatible.enable = true;
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+    };
+
+    supportedFilesystems = [ "zfs" ];
+    consoleLogLevel = 7
+  };
+
+  fileSystems = {
+    "/boot" = {
+      device = "/dev/disk/by-label/boot";
+      fsType = "vfat";
+    };
+
+    "/" = {
+      device = "rpool/root";
+      fsType = "zfs";
+      options = [ "zfsutil" ];
+    };
+
+    "/nix" = {
+      device = "rpool/nix";
+      fsType = "zfs";
+      options = [ "zfsutil" ];
+    };
+
+    "/persist" = {
+      device = "rpool/persist";
+      fsType = "zfs";
+      options = [ "zfsutil" ];
     };
   };
 
-  # fileSystems = {
-  #   "/boot" = {
-  #     device = "/dev/disk/by-label/boot";
-  #     fsType = "vfat";
-  #   };
-
-  #   "/" = {
-  #     device = lib.mkForce "/dev/disk/by-label/nixos";
-  #     fsType = "ext4";
-  #   };
-  # };
-
-  swapDevices = [ ];
+  swapDevices = [ { device = "/dev/mapper/swap"; } ];
 
   powerManagement.cpuFreqGovernor = mkDefault "ondemand";
-  hardware.enableRedistributableFirmware = true;
+  networking.hostId = lib.mkDefault "8425e349";
+  hardware.raspberry-pi."4".pwm0.enable = true;
 }
