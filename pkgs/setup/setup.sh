@@ -61,7 +61,7 @@ function _partition {
   sync && udevadm settle && sleep 2
 
   if [ "$swap_size" -gt "0" ]; then
-    cryptsetup open --type plain --key-file /dev/random "${device}3" swap
+    cryptsetup open --type plain --key-file /dev/random "${device}2" swap
     mkswap "/dev/mapper/swap"
     swapon "/dev/mapper/swap"
   fi
@@ -81,9 +81,9 @@ function _create {
     -O normalization=formD \
     -o autotrim=on \
     -O canmount=off \
-    -O realtime=on \
+    -o realtime=on \
     -O checksum=edonr \
-    rpool "${device}2"
+    rpool "${device}3"
 
   zfs create "rpool/local/root"
   zfs create -o atime=off "rpool/local/nix"
