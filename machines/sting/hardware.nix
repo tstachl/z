@@ -23,7 +23,7 @@ with lib;
     };
 
     supportedFilesystems = [ "zfs" ];
-    consoleLogLevel = 7
+    consoleLogLevel = 7;
   };
 
   fileSystems = {

@@ -3,7 +3,10 @@
     ./hardware.nix
 
     ../common/global
+    ../common/optional/fish.nix
     ../common/optional/nixos.nix
+    ../common/optional/openssh.nix
+    ../common/optional/zerotierone.nix
 
     ../common/users/thomas
     ../common/users/thomas/authorized_keys.nix
