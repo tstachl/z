@@ -11,10 +11,6 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-# define default values
-action=create
-swap_size=$(free -gh | awk -F "[, ]+" '/Mem/{printf(fmt,$2)}' fmt="%'1.2f")
-
 # validate required arguments
 if [ $# -lt 2 ]; then
   echo "Invalid number of arguments." 1>&2
@@ -38,8 +34,11 @@ unset device
 hostname=$1
 IFS=" " read -r -a devices <<< "${*:2}"
 
+# define default values
+last_column=$(gdisk -l "${devices[0]}" | awk -F "[, ]+" 'END{print $NF}')
+swap_size=$(free -gh | awk -F "[, ]+" '/Mem/{printf("%.0f",$2)}')
+
 # output selected options and arguments
-echo "Action: ${action}"
 echo "Swap size: ${swap_size}GB"
 echo "Hostname: ${hostname}"
 echo "Block devices: ${#devices[@]}"
@@ -54,19 +53,17 @@ function _partition {
   # ALL DATA WILL BE LOST
   wipefs -a "${device}"
 
-  parted -a optimal "${device}" -- mklabel gpt
-  parted -a optimal "${device}" -- mkpart ESP fat32 1MB 512MB
-  parted -a optimal "${device}" -- set 3 esp on
+  sgdisk --zap-all "${device}"
+  sgdisk -n 0:1M:+1G -t 0:EF00 -c 0:boot "${device}"
+  (( swap_size )) && sgdisk -n "0:0:+${swap_size}G" -t 0:8200 -c 0:swap "${device}"
+  sgdisk -n 0:0:0 -t 0:BF00 -c 0:nixos "${device}"
+
+  sync && udevadm settle && sleep 2
 
   if [ "$swap_size" -gt "0" ]; then
-    parted -a optimal "${device}" -- mkpart primary 512MB "-${swap_size}GB"
-    parted -a optimal "${device}" -- mkpart primary linux-swap "-${swap_size}GB" 100%
-
     cryptsetup open --type plain --key-file /dev/random "${device}3" swap
     mkswap "/dev/mapper/swap"
     swapon "/dev/mapper/swap"
-  else
-    parted -a optimal "${device}" -- mkpart primary 512MB 100%
   fi
 }
 
@@ -120,7 +117,7 @@ function _uefi_setup {
 }
 
 function main {
-  if [[ "$action" == "create" ]]; then
+  if [[ "$last_column" != "nixos" ]]; then
     _partition "${devices[0]}"
     _create "${devices[0]}"
   fi
