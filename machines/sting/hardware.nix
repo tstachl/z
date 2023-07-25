@@ -19,11 +19,12 @@ with lib;
 
     loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = [ "zfs" ];
+    zfs.devNodes = "/dev/disk/sda3";
     consoleLogLevel = 7;
   };
 
   fileSystems = {
-    "/boot" = {
+    "/boot/firmware" = {
       device = "/dev/disk/by-label/boot";
       fsType = "vfat";
     };
