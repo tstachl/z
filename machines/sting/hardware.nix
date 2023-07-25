@@ -24,7 +24,7 @@ with lib;
   };
 
   fileSystems = {
-    "/boot/firmware" = {
+    "/boot" = {
       device = "/dev/disk/by-label/boot";
       fsType = "vfat";
     };
