@@ -19,7 +19,7 @@ with lib;
 
     loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = [ "zfs" ];
-    zfs.devNodes = "/dev/disk/sda3";
+    zfs.devNodes = "/dev/disk/by-label/rpool";
     consoleLogLevel = 7;
   };
 
