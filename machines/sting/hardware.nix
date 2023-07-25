@@ -19,7 +19,7 @@ with lib;
 
     loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = [ "zfs" ];
-    zfs.devNodes = "/dev/disk/by-label/rpool";
+    zfs.devNodes = "/dev/disk/by-partuuid/561c4a9c-3202-4814-a426-d7bc40055855";
     consoleLogLevel = 7;
   };
 
