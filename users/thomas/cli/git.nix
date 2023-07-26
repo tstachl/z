@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  home.packages = [ pkgs.git pkgs.git-crypt ];
+
   programs.git = {
     enable = true;
     userName = "Thomas Stachl";
