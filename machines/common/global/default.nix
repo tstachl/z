@@ -9,6 +9,7 @@
     ./nix.nix
     # ./openssh.nix
     # ./persist.nix
+    ./zerotierone.nix
   ];
 
   environment = {
