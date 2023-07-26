@@ -8,7 +8,12 @@ with lib;
   ];
 
   boot = {
-    initrd.availableKernelModules = [ "xhci_pci" "uas" ];
+    initrd = {
+      availableKernelModules = [ "xhci_pci" "uas" ];
+      # postDeviceCommands = lib.mkAfter ''
+      #   zfs rollback -r rpool/root@blank
+      # '';
+    };
 
     kernelParams = [
       "8250.nr_uarts=1"
@@ -48,11 +53,9 @@ with lib;
     };
   };
 
-  hardware = {
-    geekworm-xscript = {
-      package = pkgs.geekworm-xscript;
-      fan.enable = true;
-    };
+  hardware.geekworm-xscript = {
+    fan.enable = true;
+    pwr.enable = true;
   };
 
   swapDevices = [ { device = "/dev/mapper/swap"; } ];
