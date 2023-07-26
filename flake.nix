@@ -52,7 +52,7 @@
 
       darwinConfigurations = {
         meili = darwin.lib.darwinSystem {
-          # inherit pkgs; # TODO: check if we need this
+          system = "aarch64-darwin";
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/meili ];
         };
