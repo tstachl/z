@@ -48,9 +48,16 @@ with lib;
     };
   };
 
+  hardware = {
+    geekworm-xscript = {
+      package = pkgs.geekworm-xscript;
+      fan.enable = true;
+    };
+  };
+
   swapDevices = [ { device = "/dev/mapper/swap"; } ];
 
   powerManagement.cpuFreqGovernor = mkDefault "ondemand";
   networking.hostId = lib.mkDefault "8425e349";
-  hardware.raspberry-pi."4".pwm0.enable = true;
+  nixpkgs.hostPlatform = "aarch64-linux";
 }
