@@ -19,6 +19,7 @@ with lib;
 
     loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = [ "zfs" ];
+    zfs.devNodes = "/dev/disk/by-partuuid/561c4a9c-3202-4814-a426-d7bc40055855";
     consoleLogLevel = 7;
   };
 
@@ -47,9 +48,16 @@ with lib;
     };
   };
 
+  hardware = {
+    geekworm-xscript = {
+      package = pkgs.geekworm-xscript;
+      fan.enable = true;
+    };
+  };
+
   swapDevices = [ { device = "/dev/mapper/swap"; } ];
 
   powerManagement.cpuFreqGovernor = mkDefault "ondemand";
   networking.hostId = lib.mkDefault "8425e349";
-  hardware.raspberry-pi."4".pwm0.enable = true;
+  nixpkgs.hostPlatform = "aarch64-linux";
 }
