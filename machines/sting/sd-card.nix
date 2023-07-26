@@ -21,5 +21,7 @@
     ];
   };
 
+  nixpkgs.hostPlatform = "aarch64-linux";
+  nixpkgs.config.allowUnfree = true;
   system.stateVersion = "23.05";
 }
