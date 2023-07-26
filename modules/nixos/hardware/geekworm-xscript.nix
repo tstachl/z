@@ -40,8 +40,6 @@ in
         };
       };
 
-      hardware.raspberry-pi."4".apply-overlays-dtmerge.enable = lib.mkDefault true;
-
       hardware.deviceTree = {
         overlays = [{
           name = "pwm-2chan-overlay";

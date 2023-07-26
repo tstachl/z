@@ -45,4 +45,5 @@ in
 
   # nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
   networking.useDHCP = lib.mkDefault true;
+  nixpkgs.hostPlatform = "aarch64-linux";
 }

@@ -53,9 +53,10 @@ with lib;
     };
   };
 
-  hardware.geekworm-xscript = {
-    fan.enable = true;
-    pwr.enable = true;
+  hardware = {
+    raspberry-pi."4".apply-overlays-dtmerge.enable = lib.mkDefault true;
+    geekworm-xscript.fan.enable = true;
+    geekworm-xscript.pwr.enable = true;
   };
 
   swapDevices = [ { device = "/dev/mapper/swap"; } ];
