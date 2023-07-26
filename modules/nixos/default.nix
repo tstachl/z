@@ -1,3 +1,3 @@
 {
-  geekworm-xscript = import ./hardware/geekworm-xscript;
+  geekworm-xscript = import ./hardware/geekworm-xscript.nix;
 }

@@ -16,7 +16,7 @@
 
   networking.hostName = "sting";
 
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "Europe/Vienna";
 
   i18n.defaultLocale = "en_US.UTF-8";
   services.openssh.enable = true;
