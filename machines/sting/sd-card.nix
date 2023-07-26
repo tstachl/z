@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 {
   imports = [
-    ../common/optional/zerotierone.nix
   ];
 
   sdImage = {
