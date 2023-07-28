@@ -54,10 +54,6 @@
     };
   };
 
-  networking.firewall.interfaces.ztuga2ekfj = {
-    allowedTCPPorts = [ 80 443 ];
-  };
-
   systemd.services.caddy.serviceConfig = {
     AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" "CAP_SYS_RESOURCE" ];
     CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" "CAP_SYS_RESOURCE" ];
