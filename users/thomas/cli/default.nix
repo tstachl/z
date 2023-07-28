@@ -7,7 +7,6 @@
     ./git.nix
     ./github.nix
     ./gnupg.nix
-    # ./pass.nix
     ./ssh.nix
     ./starship.nix
     ./zsh.nix
