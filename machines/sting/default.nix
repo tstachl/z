@@ -71,6 +71,8 @@
       config = {
         DOMAIN = "https://vault.sting.t5.st";
         SIGNUPS_ALLOWED = false;
+        YUBICO_CLIENT_ID = (builtins.readFile ../../secrets/yubico_client_id);
+        YUBICO_SECRET_KEY = (builtins.readFile ../../secrets/yubico_secret_key);
       };
     };
   };
