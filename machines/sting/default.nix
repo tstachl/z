@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   imports = [
     ./hardware.nix
@@ -20,18 +21,25 @@
   #   };
   # };
 
+  ### BEGIN
   services = {
     caddy = {
       enable = true;
+
+      globalConfig = ''
+        default_bind 172.25.60.56
+      '';
+
       virtualHosts = {
-        "vault.t5.st"= {
+        "vault.sting.t5.st"= {
           extraConfig = ''
             encode gzip
             tls {
               dns cloudflare ${(builtins.readFile ../../secrets/cloudflare)}
             }
-            root /usr
-            proxy / 127.0.0.1:8222
+            root * ${pkgs.vaultwarden.webvault}/share/vaultwarden/vault
+            reverse_proxy / 127.0.0.1:8000
+            file_server
           '';
         };
       };
@@ -40,11 +48,21 @@
     vaultwarden = {
       enable = true;
       config = {
-        DOMAIN = "vault.t5.st";
+        DOMAIN = "https://vault.sting.t5.st";
         SIGNUPS_ALLOWED = false;
       };
     };
   };
+
+  networking.firewall.interfaces.ztuga2ekfj = {
+    allowedTCPPorts = [ 80 443 ];
+  };
+
+  systemd.services.caddy.serviceConfig = {
+    AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" "CAP_SYS_RESOURCE" ];
+    CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" "CAP_SYS_RESOURCE" ];
+  };
+  ### END
 
   networking.hostName = "sting";
 
