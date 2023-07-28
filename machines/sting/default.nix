@@ -13,6 +13,39 @@
     ../common/users/thomas/nixos.nix
   ];
 
+  # stingos = {
+  #   enable = true;
+  #   apps = {
+  #     vaultwarden.enable = true;
+  #   };
+  # };
+
+  services = {
+    caddy = {
+      enable = true;
+      virtualHosts = {
+        "vault.t5.st"= {
+          extraConfig = ''
+            encode gzip
+            tls {
+              dns cloudflare ${(builtins.readFile ../../secrets/cloudflare)}
+            }
+            root /usr
+            proxy / 127.0.0.1:8222
+          '';
+        };
+      };
+    };
+
+    vaultwarden = {
+      enable = true;
+      config = {
+        DOMAIN = "vault.t5.st";
+        SIGNUPS_ALLOWED = false;
+      };
+    };
+  };
+
   networking.hostName = "sting";
 
   time.timeZone = "Europe/Vienna";
