@@ -31,15 +31,36 @@
       '';
 
       virtualHosts = {
-        "vault.sting.t5.st"= {
+        "vault.sting.t5.st:443"= {
           extraConfig = ''
-            encode gzip
             tls {
               dns cloudflare ${(builtins.readFile ../../secrets/cloudflare)}
             }
-            root * ${pkgs.vaultwarden.webvault}/share/vaultwarden/vault
-            reverse_proxy / 127.0.0.1:8000
-            file_server
+
+            encode gzip
+
+            header / {
+              # Enable HTTP Strict Transport Security (HSTS)
+              Strict-Transport-Security "max-age=31536000;"
+              # Enable cross-site filter (XSS) and tell browser to block detected attacks
+              X-XSS-Protection "0"
+              # Disallow the site to be rendered within a frame (clickjacking protection)
+              X-Frame-Options "DENY"
+              # Prevent search engines from indexing (optional)
+              X-Robots-Tag "noindex, nofollow"
+              # Disallow sniffing of X-Content-Type-Options
+              X-Content-Type-Options "nosniff"
+              # Server name removing
+              -Server
+              # Remove X-Powered-By though this shouldn't be an issue, better opsec to remove
+              -X-Powered-By
+              # Remove Last-Modified because etag is the same and is as effective
+              -Last-Modified
+            }
+
+            reverse_proxy 127.0.0.1:8000 {
+              header_up X-Real-IP {remote_host}
+            }
           '';
         };
       };
@@ -52,6 +73,10 @@
         SIGNUPS_ALLOWED = false;
       };
     };
+  };
+
+  networking.firewall.interfaces.ztuga2ekfj = {
+    allowedTCPPorts = [ 80 443 ];
   };
 
   systemd.services.caddy.serviceConfig = {
