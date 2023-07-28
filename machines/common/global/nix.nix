@@ -15,6 +15,7 @@
     };
 
     extraOptions = ''
+      warn-dirty = false
       experimental-features = nix-command flakes repl-flake
     '';
 
