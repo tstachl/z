@@ -19,8 +19,10 @@
     in
     rec {
       lib = {
-        readSecret =
-          path: nixpkgs.lib.removeSuffix "\n" (builtins.readFile path);
+        readSecret = (secret:
+          nixpkgs.lib.removeSuffix "\n"
+            (builtins.readFile "${self}/secrets/${secret}")
+        );
       };
 
       packages = forAllSystems (system:

@@ -34,7 +34,7 @@
         "vault.sting.t5.st:443"= {
           extraConfig = ''
             tls {
-              dns cloudflare ${(outputs.lib.readSecret ../../secrets/cloudflare)}
+              dns cloudflare ${(outputs.lib.readSecret "cloudflare")}
             }
 
             encode gzip
@@ -71,8 +71,8 @@
       config = {
         DOMAIN = "https://vault.sting.t5.st";
         SIGNUPS_ALLOWED = false;
-        YUBICO_CLIENT_ID = (outputs.lib.readSecret ../../secrets/yubico_client_id);
-        YUBICO_SECRET_KEY = (outputs.lib.readSecret ../../secrets/yubico_secret_key);
+        YUBICO_CLIENT_ID = (outputs.lib.readSecret "yubico_client_id");
+        YUBICO_SECRET_KEY = (outputs.lib.readSecret "yubico_secret_key");
       };
     };
   };
