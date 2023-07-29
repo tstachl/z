@@ -18,6 +18,11 @@
       ];
     in
     rec {
+      lib = {
+        readSecret =
+          path: nixpkgs.lib.removeSuffix "\n" (builtins.readFile path);
+      };
+
       packages = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in import ./pkgs { inherit pkgs; }
@@ -37,9 +42,6 @@
         sting = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/sting ];
-          # get all the apps for sting and load them as modules
-          # modules = map (file: "${./modules/sting}/${file}")
-          #   (builtins.attrNames (builtins.readDir ./modules/sting));
         };
 
         sdcard = nixpkgs.lib.nixosSystem {
