@@ -45,6 +45,13 @@ in
       description = mdDoc "ZeroNSD package to use.";
     };
 
+    systemd-manager.package = mkOption {
+      default = pkgs.zerotier-systemd-manager;
+      defaultText = literalExpression "pkgs.zerotier-systemd-manager";
+      type = types.package;
+      description = mdDoc "ZeroTier Systemd Manager package to use.";
+    };
+
     networks = mkOption {
       type = with types; attrsOf (submodule (import ./network-options.nix));
       default = {};
@@ -106,33 +113,60 @@ in
     }
 
     (mkIf (any (n: n.zeronsd.enable) networks) {
-      environment.systemPackages = [ cfg.zeronsd.package ];
+      environment.systemPackages = [ cfg.zeronsd.package cfg.systemd-manager.package ];
 
-      systemd.services = mapAttrs' (name: value:
-        nameValuePair ("zeronsd-" + name) ({
-          description = "zeronsd for network ${name}";
+      systemd.timers.zerotier-systemd-manager = {
+        description = "Update zerotier per-interface DNS settings";
 
-          wantedBy = [ "default.target" ];
-          after = [ "zerotier-one.service" ];
-          requires = [ "zerotier-one.service" ];
+        wantedBy = [ "timers.target" ];
 
-          serviceConfig = {
-            Type = "simple";
+        timerConfig = {
+          OnStartupSec = "1min";
+          OnUnitInactiveSec = "1min";
+        };
+      };
 
-            ExecStart = concatStringsSep " " ([ "${cfg.zeronsd.package}/bin/zeronsd" "start" ] ++
-              (filter (el: el != "") (flatten (mapAttrsToList (n: v:
-                if n == "token" && v != "" then [ "-t" "${pkgs.writeTextDir "token" v}/token" ]
-                else if n == "domain" && v != "" then [ "-d" v ]
-                else if n == "wildcard" && v == true then "-w"
-                else if n == "hosts" && v != "" then [ "-f" "${pkgs.writeTextDir "hosts" v}/hosts"]
-                else ""
-              ) value.zeronsd) ++ [ name ])));
+      systemd.services = mkMerge [
+        {
+          zerotier-systemd-manager = {
+            description = "Update zerotier per-interface DNS settings";
 
-            TimeoutStopSec = 30;
-            Restart = "always";
+            requires = [ "zerotier-one.service" ];
+            after = [ "zerotier-one.service" ];
+
+            serviceConfig = {
+              Type = "oneshot";
+              ExecStart = "${cfg.systemd-manager.package}/bin/zerotier-systemd-manager";
+            };
           };
-        })
-      ) (filterAttrs (n: v: v.zeronsd.enable) cfg.networks);
+        }
+
+        (mapAttrs' (name: value:
+          nameValuePair ("zeronsd-" + name) ({
+            description = "zeronsd for network ${name}";
+
+            wantedBy = [ "default.target" ];
+            after = [ "zerotier-one.service" ];
+            requires = [ "zerotier-one.service" ];
+
+            serviceConfig = {
+              Type = "simple";
+
+              ExecStart = concatStringsSep " " ([ "${cfg.zeronsd.package}/bin/zeronsd" "start" ] ++
+                (filter (el: el != "") (flatten (mapAttrsToList (n: v:
+                  if n == "token" && v != "" then [ "-t" "${pkgs.writeTextDir "token" v}/token" ]
+                  else if n == "domain" && v != "" then [ "-d" v ]
+                  else if n == "wildcard" && v == true then "-w"
+                  else if n == "hosts" && v != "" then [ "-f" "${pkgs.writeTextDir "hosts" v}/hosts"]
+                  else ""
+                ) value.zeronsd) ++ [ name ])));
+
+              TimeoutStopSec = 30;
+              Restart = "always";
+            };
+          })
+        ) (filterAttrs (n: v: v.zeronsd.enable) cfg.networks))
+      ];
     })
   ]);
 }
