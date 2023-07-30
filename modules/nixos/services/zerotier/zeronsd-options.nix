@@ -4,6 +4,8 @@ with lib;
 
 {
   options = {
+    enable = mkEnableOption (mdDoc "ZeroNSD");
+
     domain = mkOption {
       type = types.str;
       description = mdDoc "TLD to use for hostnames.";

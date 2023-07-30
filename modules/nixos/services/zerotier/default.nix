@@ -38,6 +38,13 @@ in
       description = mdDoc "ZeroTier One package to use.";
     };
 
+    zeronsd.package = mkOption {
+      default = pkgs.zeronsd;
+      defaultText = literalExpression "pkgs.zeronsd";
+      type = types.package;
+      description = mdDoc "ZeroNSD package to use.";
+    };
+
     networks = mkOption {
       type = with types; attrsOf (submodule (import ./network-options.nix));
       default = {};
@@ -56,13 +63,10 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
-    # TODO: find out if this works on nix-darwin
-    (if (builtins.hasAttr "launchd" options) then {
-      # TODO: add darwin options
-    } else {
+    {
       environment.systemPackages = [ cfg.package ];
 
-      systemd.services.zerotier = {
+      systemd.services.zerotier-one = {
         description = "ZeroTier One";
 
         wantedBy = [ "multi-user.target" ];
@@ -99,7 +103,36 @@ in
           MACAddressPolicy = "none";
         };
       };
-    })
+    }
 
+    (mkIf (any (n: n.zeronsd.enable) networks) {
+      environment.systemPackages = [ cfg.zeronsd.package ];
+
+      systemd.services = mapAttrs' (name: value:
+        nameValuePair ("zeronsd-" + name) ({
+          description = "zeronsd for network ${name}";
+
+          wantedBy = [ "default.target" ];
+          after = [ "zerotier-one.service" ];
+          requires = [ "zerotier-one.service" ];
+
+          serviceConfig = {
+            Type = "simple";
+
+            ExecStart = concatStringsSep " " ([ "${cfg.zeronsd.package}/bin/zeronsd" "start" ] ++
+              (filter (el: el != "") (flatten (mapAttrsToList (n: v:
+                if n == "token" && v != "" then [ "-t" "${pkgs.writeTextDir "token" v}/token" ]
+                else if n == "domain" && v != "" then [ "-d" v ]
+                else if n == "wildcard" && v == true then "-w"
+                else if n == "hosts" && v != "" then [ "-f" "${pkgs.writeTextDir "hosts" v}/hosts"]
+                else ""
+              ) value.zeronsd) ++ [ name ])));
+
+            TimeoutStopSec = 30;
+            Restart = "always";
+          };
+        })
+      ) (filterAttrs (n: v: v.zeronsd.enable) cfg.networks);
+    })
   ]);
 }
