@@ -1,15 +1,9 @@
 { pkgs, ... }:
 {
   imports = [
-    # ./agenix.nix
-    # ./fish.nix
-    # ./gnupg.nix
     ./home-manager.nix
-    # ./locale.nix
     ./nix.nix
-    # ./openssh.nix
-    # ./persist.nix
-    ./zerotierone.nix
+    ./zerotier.nix
   ];
 
   environment = {
