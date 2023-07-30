@@ -27,9 +27,9 @@
       "protonvpn"
       "syncthing"
       "whatsapp"
+      "zerotier-one"
     ];
     masApps = {
-      "Tailscale" = 1475387142;
       "Yubico Authenticator" = 1497506650;
       # # "UTM Virtual Machines" = 1538878817; costs $9.99 in the app store
       "Speechify" = 1624912180;
@@ -39,8 +39,22 @@
     onActivation.upgrade = true;
   };
 
-  networking.hostName = "meili";
-  networking.remoteLogin = true;
+  networking = {
+    hostName = "meili";
+    remoteLogin = true;
+    dns = [
+      # zerotier
+      "172.25.60.56"
+      "45.90.28.226"
+      "45.90.30.226"
+      # nextdns
+      # quad9
+    ];
+    knownNetworkServices = [
+      "Wi-Fi"
+      "Thunderbolt Bridge"
+    ];
+  };
   time.timeZone = "Europe/Vienna";
   system.stateVersion = 4;
 }
