@@ -1,4 +1,3 @@
-{ cfg }:
 { config, lib, name, ... }:
 
 let

@@ -39,7 +39,7 @@ in
     };
 
     networks = mkOption {
-      type = with types; attrsOf (submodule (import ./network-options.nix { inherit cfg; }));
+      type = with types; attrsOf (submodule (import ./network-options.nix));
       default = {};
       example = literalExpression ''
         {
@@ -60,8 +60,7 @@ in
   config = mkIf cfg.enable (mkMerge [
     # TODO: find out if this works on nix-darwin
     (if (builtins.hasAttr "launchd" options) then {
-
-
+      # TODO: add darwin options
     } else {
       environment.systemPackages = [ cfg.package ];
 
@@ -104,14 +103,4 @@ in
     })
 
   ]);
-
-    # (optionalAttrs (builtins.hasAttr "launchd" options) {
-
-    # })
-
-    # {
-
-    # }
-
-  # ]);
 }
