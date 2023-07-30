@@ -145,7 +145,7 @@ in
           nameValuePair ("zeronsd-" + name) ({
             description = "zeronsd for network ${name}";
 
-            wantedBy = [ "default.target" ];
+            wantedBy = [ "multi-user.target" ];
             after = [ "zerotier-one.service" ];
             requires = [ "zerotier-one.service" ];
 
