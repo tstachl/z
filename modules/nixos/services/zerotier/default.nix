@@ -45,9 +45,7 @@ in
         {
           "d5e04297a16fa690" = {
             allowManaged = 1;
-            allowGlobal = 0;
-            allowDefault = 0;
-            allowDNS = 0;
+            allowDNS = 1;
           };
         };
       '';
@@ -82,6 +80,7 @@ in
           Restart = "always";
           KillMode = "process";
           TimeoutStopSec = 5;
+          # LoadCredential=zerotiertoken:/var/lib/zerotier-one/token
         };
       };
 

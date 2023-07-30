@@ -1,8 +1,6 @@
-{ config, lib, name, ... }:
+{ lib, name, ... }:
 
-let
-  inherit (lib) mdDoc mkOption types;
-in
+with lib;
 
 {
   options = {
@@ -13,32 +11,52 @@ in
       type = types.str;
     };
 
+    zeronsd = mkOption {
+      type = with types; submodule (import ./zeronsd-options.nix);
+      default = {};
+      example = literalExpression ''
+        {
+          zeronsd = {
+            domain = "beyond.corp";
+            hosts = '''
+              1.1.1.1 cloudflare-dns
+            ''';
+            token = "iOaQ8HMi7mspJwyWUFAAXUehmjr3UVeb";
+            wildcard = true;
+          };
+        };
+      '';
+      description = mdDoc ''
+        Declarative specifications of ZeroNSD on a by network basis.
+      '';
+    };
+
     allowManaged = mkOption {
       default = true;
-      example = true;
-      description = mdDoc "Allow this network to configure IP addresses and routes?";
       type = types.bool;
+      description = mdDoc "Allow this network to configure IP addresses and routes?";
+      example = true;
     };
 
     allowGlobal = mkOption {
       default = false;
-      example = true;
-      description = mdDoc "Allow configuration of IPs and routes within global (Internet) IP space?";
       type = types.bool;
+      description = mdDoc "Allow configuration of IPs and routes within global (Internet) IP space?";
+      example = true;
     };
 
     allowDefault = mkOption {
       default = false;
-      example = true;
-      description = mdDoc "Allow overriding of system default routes for \"full tunnel\" operation?";
       type = types.bool;
+      description = mdDoc "Allow overriding of system default routes for \"full tunnel\" operation?";
+      example = true;
     };
 
     allowDNS = mkOption {
       default = false;
-      example = true;
-      description = mdDoc "Allow configuration of DNS for the network?";
       type = types.bool;
+      description = mdDoc "Allow configuration of DNS for the network?";
+      example = true;
     };
   };
 }
