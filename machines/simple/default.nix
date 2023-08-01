@@ -26,16 +26,13 @@
           hosts = ''
             1.1.1.1 cloudflare-dns
           '';
+          domain = "t5.st";
           token = "${outputs.lib.readSecret "zerotier"}";
           wildcard = true;
-          log_level = "debug";
         };
       };
     };
   };
-
-  services.resolved.enable = true;
-  systemd.network.enable = true;
 
   environment.systemPackages = [ pkgs.dig ];
 

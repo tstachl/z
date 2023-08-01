@@ -43,7 +43,14 @@ in
     device = "/dev/disk/by-label/swap";
   }];
 
-  # nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
-  networking.useDHCP = lib.mkDefault true;
+  systemd.network.enable = true;
+  systemd.network.networks."99-ethernet-default-dhcp" = {
+    matchConfig.Name = "en*";
+    linkConfig.RequiredForOnline = false;
+
+    networkConfig.DHCP = "yes";
+    networkConfig.IPv6PrivacyExtensions = "kernel";
+  };
+
   nixpkgs.hostPlatform = "aarch64-linux";
 }

@@ -12,10 +12,10 @@ let
   networks = attrValues cfg.networks;
   mkNetworkConf = network:
     ''
-    echo -e "allowManaged=${toString network.allowManaged}
-    allowGlobal=${toString network.allowGlobal}
-    allowDefault=${toString network.allowDefault}
-    allowDNS=${toString network.allowDNS}" \
+    echo -e "allowManaged=${if network.allowManaged then "1" else "0"}
+    allowGlobal=${if network.allowGlobal then "1" else "0"}
+    allowDefault=${if network.allowDefault then "1" else "0"}
+    allowDNS=${if network.allowDNS then "1" else "0"}" \
     > /var/lib/zerotier-one/networks.d/${network.networkId}.local.conf
     '';
 in
@@ -114,11 +114,6 @@ in
 
     (mkIf (any (n: n.zeronsd.enable) networks) {
       environment.systemPackages = [ cfg.zeronsd.package cfg.systemd-manager.package ];
-
-      networking.firewall.interfaces.ztuga2ekfj = {
-        allowedTCPPorts = [ 53 ];
-        allowedUDPPorts = [ 53 ];
-      };
 
       systemd.timers.zerotier-systemd-manager = {
         description = "Update zerotier per-interface DNS settings";
