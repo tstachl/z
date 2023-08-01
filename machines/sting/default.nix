@@ -12,80 +12,35 @@
     ../common/users/thomas/authorized_keys.nix
     ../common/users/thomas/groups.nix
     ../common/users/thomas/nixos.nix
+
+    ./vaultwarden.nix
   ];
 
-  # stingos = {
-  #   enable = true;
-  #   apps = {
-  #     vaultwarden.enable = true;
-  #   };
-  # };
+  ### beafon start
+  systemd.services.nextdns-updater = {
+    description = "Updates NextDNS with current IP";
 
-  ### BEGIN
-  services = {
-    caddy = {
-      enable = true;
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
 
-      globalConfig = ''
-        default_bind 172.25.60.56
-      '';
-
-      virtualHosts = {
-        "vault.sting.t5.st:443"= {
-          extraConfig = ''
-            tls {
-              dns cloudflare ${(outputs.lib.readSecret "cloudflare")}
-            }
-
-            encode gzip
-
-            header / {
-              # Enable HTTP Strict Transport Security (HSTS)
-              Strict-Transport-Security "max-age=31536000;"
-              # Enable cross-site filter (XSS) and tell browser to block detected attacks
-              X-XSS-Protection "0"
-              # Disallow the site to be rendered within a frame (clickjacking protection)
-              X-Frame-Options "DENY"
-              # Prevent search engines from indexing (optional)
-              X-Robots-Tag "noindex, nofollow"
-              # Disallow sniffing of X-Content-Type-Options
-              X-Content-Type-Options "nosniff"
-              # Server name removing
-              -Server
-              # Remove X-Powered-By though this shouldn't be an issue, better opsec to remove
-              -X-Powered-By
-              # Remove Last-Modified because etag is the same and is as effective
-              -Last-Modified
-            }
-
-            reverse_proxy 127.0.0.1:8000 {
-              header_up X-Real-IP {remote_host}
-            }
-          '';
-        };
-      };
-    };
-
-    vaultwarden = {
-      enable = true;
-      config = {
-        DOMAIN = "https://vault.sting.t5.st";
-        SIGNUPS_ALLOWED = false;
-        YUBICO_CLIENT_ID = (outputs.lib.readSecret "yubico_client_id");
-        YUBICO_SECRET_KEY = (outputs.lib.readSecret "yubico_secret_key");
-      };
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.curl}/bin/curl -sL ${outputs.lib.readSecret "nextdns-ip-update"}";
     };
   };
 
-  networking.firewall.interfaces.ztuga2ekfj = {
-    allowedTCPPorts = [ 80 443 ];
-  };
+  systemd.timers.nextdns-updater = {
+    description = "Update NextDNS with current IP";
 
-  systemd.services.caddy.serviceConfig = {
-    AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" "CAP_SYS_RESOURCE" ];
-    CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" "CAP_SYS_RESOURCE" ];
+    wantedBy = [ "timers.target" ];
+
+    timerConfig = {
+      OnStartupSec = "1min";
+      OnUnitInactiveSec = "1min";
+    };
   };
-  ### END
+  ### beafon end
 
   networking.hostName = "sting";
 
