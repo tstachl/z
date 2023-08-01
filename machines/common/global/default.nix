@@ -3,7 +3,6 @@
   imports = [
     ./home-manager.nix
     ./nix.nix
-    ./zerotier.nix
   ];
 
   environment = {
