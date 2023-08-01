@@ -42,18 +42,6 @@
   networking = {
     hostName = "meili";
     remoteLogin = true;
-    dns = [
-      # zerotier
-      "172.25.60.56"
-      "45.90.28.226"
-      "45.90.30.226"
-      # nextdns
-      # quad9
-    ];
-    knownNetworkServices = [
-      "Wi-Fi"
-      "Thunderbolt Bridge"
-    ];
   };
   time.timeZone = "Europe/Vienna";
   system.stateVersion = 4;
