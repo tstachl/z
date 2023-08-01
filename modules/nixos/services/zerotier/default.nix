@@ -115,6 +115,11 @@ in
     (mkIf (any (n: n.zeronsd.enable) networks) {
       environment.systemPackages = [ cfg.zeronsd.package cfg.systemd-manager.package ];
 
+      networking.firewall.interfaces.ztuga2ekfj = {
+        allowedTCPPorts = [ 53 ];
+        allowedUDPPorts = [ 53 ];
+      };
+
       systemd.timers.zerotier-systemd-manager = {
         description = "Update zerotier per-interface DNS settings";
 
@@ -152,14 +157,18 @@ in
             serviceConfig = {
               Type = "simple";
 
-              ExecStart = concatStringsSep " " ([ "${cfg.zeronsd.package}/bin/zeronsd" "start" ] ++
+              ExecStart = concatStringsSep " " (
+                [ "${cfg.zeronsd.package}/bin/zeronsd" "start" ] ++
+
                 (filter (el: el != "") (flatten (mapAttrsToList (n: v:
-                  if n == "token" && v != "" then [ "-t" "${pkgs.writeTextDir "token" v}/token" ]
-                  else if n == "domain" && v != "" then [ "-d" v ]
+                  if n == "token" then [ "-t" "${pkgs.writeTextDir "token" v}/token" ]
+                  else if n == "domain" then [ "-d" v ]
                   else if n == "wildcard" && v == true then "-w"
                   else if n == "hosts" && v != "" then [ "-f" "${pkgs.writeTextDir "hosts" v}/hosts"]
+                  else if n == "log_level" then [ "-l" v ]
                   else ""
-                ) value.zeronsd) ++ [ name ])));
+                ) value.zeronsd) ++ [ name ]))
+              );
 
               TimeoutStopSec = 30;
               Restart = "always";

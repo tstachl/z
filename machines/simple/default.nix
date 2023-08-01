@@ -1,4 +1,4 @@
-{ lib, config, inputs, ... }:
+{ pkgs, outputs, ... }:
 {
   imports = [
     ./hardware.nix
@@ -15,6 +15,29 @@
     ../common/users/thomas/groups.nix
     ../common/users/thomas/nixos.nix
   ];
+
+  services.zerotier = {
+    enable = true;
+    networks = {
+      "${(outputs.lib.readSecret "stoic_krum")}" = {
+        allowDNS = true;
+        zeronsd = {
+          enable = true;
+          hosts = ''
+            1.1.1.1 cloudflare-dns
+          '';
+          token = "${outputs.lib.readSecret "zerotier"}";
+          wildcard = true;
+          log_level = "debug";
+        };
+      };
+    };
+  };
+
+  services.resolved.enable = true;
+  systemd.network.enable = true;
+
+  environment.systemPackages = [ pkgs.dig ];
 
   networking.hostName = "simple";
 

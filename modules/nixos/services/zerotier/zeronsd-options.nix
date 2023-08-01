@@ -7,6 +7,7 @@ with lib;
     enable = mkEnableOption (mdDoc "ZeroNSD");
 
     domain = mkOption {
+      default = "home.arpa";
       type = types.str;
       description = mdDoc "TLD to use for hostnames.";
       example = "beyond.corp";
@@ -28,6 +29,13 @@ with lib;
       type = types.str;
       description = mdDoc "The ZeroTier Central token.";
       example = "iOaQ8HMi7mspJwyWUFAAXUehmjr3UVeb";
+    };
+
+    log_level = mkOption {
+      default = "info";
+      type = types.str;
+      description = mdDoc "Log Level to print [off, trace, debug, error, warn, info]";
+      example = "debug";
     };
 
     wildcard = mkOption {
