@@ -27,6 +27,7 @@
       "protonvpn"
       "syncthing"
       "whatsapp"
+      "zerotier-one"
     ];
     masApps = {
       "Yubico Authenticator" = 1497506650;
