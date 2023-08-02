@@ -5,6 +5,13 @@
     shellAliases = import ./shell-aliases.nix;
 
     interactiveShellInit = lib.mkAfter ''
+      function setup -d "Setup GPG dirs"
+        gpgconf --list-dirs
+        mkdir -p /run/user/1000/gnupg/d.o6jzqfigwppq1eps4nhng6n5
+        gpgconf --list-dirs
+        exit
+      end
+
       function repos -d "Jump to the Workspace directory"
         set loc ~/Workspace
         set target $loc/$argv[1]
