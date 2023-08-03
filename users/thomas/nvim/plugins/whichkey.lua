@@ -66,13 +66,12 @@ which_key.setup {
 }
 
 which_key.register({
-  ["a"] = { "<cmd>Alpha<cr>", "Alpha" },
   ["b"] = {
     "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<cr>",
     "Buffers",
   },
   ["e"] = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
-  -- ["w"] = { "<cmd>w!<CR>", "Save" },
+  ["w"] = { "<cmd>w!<CR>", "Save" },
   ["q"] = { "<cmd>qa!<CR>", "Quit" },
   ["d"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
   ["h"] = { "<cmd>nohlsearch<CR>", "No Highlight" },
@@ -81,40 +80,6 @@ which_key.register({
     "Find files",
   },
   ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
-  ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
-
-  z = {
-    name = "Telekasten",
-    f = { "<cmd>lua require('telekasten').find_notes()<cr>", "Find Notes" },
-    d = { "<cmd>lua require('telekasten').find_daily_notes()<cr>", "Find Daily Notes" },
-    g = { "<cmd>lua require('telekasten').search_notes()<cr>", "Search Notes" },
-    z = { "<cmd>lua require('telekasten').follow_link()<cr>", "Follow Link" },
-    T = { "<cmd>lua require('telekasten').goto_today()<cr>", "Today" },
-    W = { "<cmd>lua require('telekasten').goto_thisweek()<cr>", "This Week" },
-    w = { "<cmd>lua require('telekasten').find_weekly_notes()<cr>", "Find Weekly Notes" },
-    n = { "<cmd>lua require('telekasten').new_note()<cr>", "New Note" },
-    N = { "<cmd>lua require('telekasten').new_templated_note()<cr>", "New Templated Note" },
-    y = { "<cmd>lua require('telekasten').yank_notelink()<cr>", "Yank Note Link" },
-    c = { "<cmd>lua require('telekasten').show_calendar()<cr>", "Show Calendar" },
-    i = { "<cmd>lua require('telekasten').paste_img_and_link()<cr>", "Paste Image and Link" },
-    t = { "<cmd>lua require('telekasten').toggle_todo()<cr>", "Toggle Todo" },
-    b = { "<cmd>lua require('telekasten').show_backlinks()<cr>", "Show Backlinks" },
-    F = { "<cmd>lua require('telekasten').find_friends()<cr>", "Find Friends" },
-    I = { "<cmd>lua require('telekasten').insert_img_link({ i=true })<cr>", "Inser Image Link" },
-    p = { "<cmd>lua require('telekasten').preview_img()<cr>", "Preview Image" },
-    m = { "<cmd>lua require('telekasten').browse_media()<cr>", "Browse Media" },
-    ["#"] = { "<cmd>lua require('telekasten').show_tags()<cr>", "Show Tags" },
-    r = { "<cmd>lua require('telekasten').rename_note()<cr>", "Rename Note" },
-  },
-
-  p = {
-    name = "Packer",
-    c = { "<cmd>PackerCompile<cr>", "Compile" },
-    i = { "<cmd>PackerInstall<cr>", "Install" },
-    s = { "<cmd>PackerSync<cr>", "Sync" },
-    S = { "<cmd>PackerStatus<cr>", "Status" },
-    u = { "<cmd>PackerUpdate<cr>", "Update" },
-  },
 
   g = {
     name = "Git",
@@ -139,37 +104,6 @@ which_key.register({
     },
   },
 
-  l = {
-    name = "LSP",
-    a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
-    d = {
-      "<cmd>Telescope lsp_document_diagnostics<cr>",
-      "Document Diagnostics",
-    },
-    w = {
-      "<cmd>Telescope lsp_workspace_diagnostics<cr>",
-      "Workspace Diagnostics",
-    },
-    f = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" },
-    i = { "<cmd>LspInfo<cr>", "Info" },
-    I = { "<cmd>LspInstallInfo<cr>", "Installer Info" },
-    j = {
-      "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>",
-      "Next Diagnostic",
-    },
-    k = {
-      "<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>",
-      "Prev Diagnostic",
-    },
-    l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
-    q = { "<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>", "Quickfix" },
-    r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
-    s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
-    S = {
-      "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
-      "Workspace Symbols",
-    },
-  },
   s = {
     name = "Search",
     b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
@@ -182,13 +116,14 @@ which_key.register({
     C = { "<cmd>Telescope commands<cr>", "Commands" },
   },
 
+  r = {
+    name = "Rust Tools",
+    h = { "<cmd>lua require'rust-tools'.hover_actions.hover_actions()<cr>", "Hover Actions" },
+    r = { "<cmd>lua require('rust-tools').runnables.runnables()<cr>", "Runnables" },
+  },
+
   t = {
     name = "Terminal",
-    cr = { "<cmd>lua _CARGO_RUN_TOGGLE()<cr>", "Cargo Run" },
-    n = { "<cmd>lua _NODE_TOGGLE()<cr>", "Node" },
-    u = { "<cmd>lua _NCDU_TOGGLE()<cr>", "NCDU" },
-    t = { "<cmd>lua _HTOP_TOGGLE()<cr>", "Htop" },
-    p = { "<cmd>lua _PYTHON_TOGGLE()<cr>", "Python" },
     f = { "<cmd>ToggleTerm direction=float<cr>", "Float" },
     h = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", "Horizontal" },
     v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
