@@ -36,11 +36,6 @@
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
-
-      (import (fetchTarball {
-        url = "https://github.com/oxalica/rust-overlay/archive/stable.tar.gz";
-        sha256 = "sha256:1jjqpdc9qfyrjrka3xnxzrj8zfhp25p1im0h3a2m94sknvh1c7vi";
-      }))
     ];
 
     config = {
