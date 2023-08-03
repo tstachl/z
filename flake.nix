@@ -25,6 +25,13 @@
         );
       };
 
+      templates = {
+        rust-toolchain = {
+          path = ./templates/rust-toolchain;
+          description = "a rust toolchain template";
+        };
+      };
+
       packages = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in import ./pkgs { inherit pkgs; }
