@@ -25,6 +25,8 @@
       nvim-autopairs
       which-key-nvim
       editorconfig-nvim
+
+      rust-tools-nvim
     ];
     extraLuaConfig = ''
       vim.cmd("set secure exrc")
@@ -49,6 +51,8 @@
       ${lib.strings.fileContents ./plugins/toggleterm.lua}
       ${lib.strings.fileContents ./plugins/treesitter.lua}
       ${lib.strings.fileContents ./plugins/whichkey.lua}
+
+      ${lib.strings.fileContents ./plugins/rust-tools.lua}
     '';
    };
 }
