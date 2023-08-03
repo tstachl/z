@@ -1,0 +1,10 @@
+[package]
+name = "rust-toolchain"
+version = "0.1.0"
+authors = ["Thomas Stachl <thomas@stachl.me>"]
+edition = "2021"
+
+[dependencies]
+
+[dev-dependencies]
+
