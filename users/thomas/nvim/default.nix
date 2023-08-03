@@ -26,6 +26,7 @@
       which-key-nvim
       editorconfig-nvim
 
+      nvim-lspconfig
       rust-tools-nvim
     ];
     extraLuaConfig = ''
@@ -52,6 +53,7 @@
       ${lib.strings.fileContents ./plugins/treesitter.lua}
       ${lib.strings.fileContents ./plugins/whichkey.lua}
 
+      ${lib.strings.fileContents ./plugins/lspconfig.lua}
       ${lib.strings.fileContents ./plugins/rust-tools.lua}
     '';
    };
