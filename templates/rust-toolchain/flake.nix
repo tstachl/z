@@ -37,7 +37,7 @@
           buildInputs = [
             openssl
             pkg-config
-            rust
+            rustVersion
           ];
         };
       }
