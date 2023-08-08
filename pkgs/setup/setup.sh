@@ -109,7 +109,7 @@ function _mount {
 
 function _uefi_setup {
   # only works on raspi sd card
-  [-d /firmware ] || mkdir /firmware
+  [ -d /firmware ] || mkdir /firmware
   mount "/dev/${sd_device}" /firmware
   rm -rf /mnt/boot/*
   cp /firmware/* /mnt/boot
