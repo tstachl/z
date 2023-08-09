@@ -276,12 +276,12 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
     Lua = {
+      diagnostics = { globals = { "vim" }, },
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
@@ -289,6 +289,7 @@ local servers = {
 
   nil_ls = {},
   bashls = {},
+  rust_analyzer = {},
 }
 
 -- Setup neovim lua configuration
