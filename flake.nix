@@ -17,7 +17,7 @@
         "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin"
       ];
     in
-    rec {
+    {
       lib = {
         readSecret = (secret:
           nixpkgs.lib.removeSuffix "\n"
@@ -77,5 +77,10 @@
       #     modules = [ ./users/thomas ];
       #   };
       # };
+
+      devShell = forAllSystems(system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in pkgs.mkShell { buildInputs = with pkgs; [ lua-language-server nil nodePackages.bash-language-server ]; }
+      );
     };
 }
