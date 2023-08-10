@@ -6,7 +6,7 @@ in
 {
   imports = [
     ./cli
-    ./nvim
+    ./nvim.nix
   ] ++ (builtins.attrValues outputs.homeManagerModules);
 
   nix = {
