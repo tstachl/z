@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  home.packages = [ pkgs.ripgrep pkgs.zig pkgs.unzip pkgs.wget ];
+  home.packages = with pkgs; [ fd ripgrep unzip wget zig ];
 
   programs.neovim = {
     enable = true;
