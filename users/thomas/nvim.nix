@@ -41,45 +41,6 @@
         '';
       }
 
-      # A better tree
-      {
-        plugin = nvim-tree-lua;
-        type = "lua";
-        config = ''
-          require("nvim-tree").setup {
-            disable_netrw = true,
-            view = {
-              side = "left",
-            },
-            renderer = {
-              root_folder_label = false,
-              icons = {
-                glyphs = {
-                  default = "",
-                  symlink = "",
-                  git = {
-                    unstaged = "",
-                    staged = "S",
-                    unmerged = "",
-                    renamed = "➜",
-                    deleted = "",
-                    untracked = "U",
-                    ignored = "◌",
-                  },
-                  folder = {
-                    default = "",
-                    open = "",
-                    empty = "",
-                    empty_open = "",
-                    symlink = "",
-                  },
-                },
-              },
-            },
-          }
-        '';
-      }
-
       # Highlight, edit, and navigate code
       {
         plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars );
