@@ -1,231 +1,168 @@
-{ pkgs, ... }:
+{ inputs, config, ... }:
 {
-  home.packages = with pkgs; [ fd ripgrep unzip wget zig ];
+  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
 
-  programs.neovim = {
+  programs.nixvim = {
     enable = true;
-    vimAlias = true;
-    viAlias = true;
-    vimdiffAlias = true;
-    plugins = with pkgs.vimPlugins; [
-      # Fuzzy Finder (files, lsp, etc)
-      {
-        plugin = telescope-nvim;
-        type = "lua";
-        config = ''
-          local builtin = require("telescope.builtin")
-          vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
-          vim.keymap.set("n", "<C-p>", builtin.git_files, {})
-          vim.keymap.set("n", "<leader>ps", function()
-            builtin.grep_string({ search = vim.fn.input("Grep > ") })
-          end)
-          vim.keymap.set("n", "<leader>vh", builtin.help_tags, {})
-        '';
-      }
-      # dependency
-      plenary-nvim
-      # Fuzzy Finder Algorithm
-      telescope-fzf-native-nvim
 
-      # Color scheme
-      {
-        plugin = nightfox-nvim;
-        type = "lua";
-        config = ''
-          require("nightfox").setup {
-            options = {
-              transparent = true,
-            },
-          }
-          vim.cmd("colorscheme nordfox")
-        '';
-      }
+    globals.mapleader = " ";
 
-      # Highlight, edit, and navigate code
-      {
-        plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars );
-        type = "lua";
-        config = ''
-          require("nvim-treesitter.configs").setup {
-            sync_install = false,
-            auto_install = false,
+    options = {
+      guicursor = "";
 
-            autopairs = { enable = true, },
-            highlight = {
-              enable = true,
-              -- TODO: periodically check if bash is working again
-              disable = { "bash" },
-              additional_vim_regex_highlighting = false,
-            },
-            indent = { enable = true, disable = { "yaml" } },
-            context_commentstring = { enable = true, enable_autocmd = false, },
-          }
-        '';
-      }
-      nvim-treesitter-context
-      nvim-treesitter-textobjects
+      number = true;
+      relativenumber = true;
 
-      # Switch between files, blazingly fast ...
-      {
-        plugin = harpoon;
-        type = "lua";
-        config = ''
-          local mark = require("harpoon.mark")
-          local ui = require("harpoon.ui")
+      tabstop = 4;
+      softtabstop = 4;
+      shiftwidth = 4;
+      expandtab = true;
 
-          vim.keymap.set("n", "<leader>a", mark.add_file)
-          vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+      smartindent = true;
 
-          vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
-          vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
-          vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
-          vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
-        '';
-      }
+      wrap = false;
 
-      # See and undo recent changes
-      {
-        plugin = undotree;
-        type = "lua";
-        config = ''
-          vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
-        '';
-      }
+      swapfile = false;
+      backup = false;
+      undodir = "${config.xdg.dataHome}/nvim/undodir";
+      undofile = true;
 
-      # Git related plugins
-      {
-        plugin = vim-fugitive;
-        type = "lua";
-        config = ''
-          vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
-        '';
-      }
+      hlsearch = false;
+      incsearch = true;
 
-      # LSP Support
-      nvim-lspconfig
-      # Autocompletion
-      nvim-cmp
-      cmp-buffer
-      cmp-path
-      cmp_luasnip
-      cmp-nvim-lsp
-      cmp-nvim-lua
-      # Snippets
-      luasnip
-      friendly-snippets
+      termguicolors = true;
 
-      {
-        plugin = lsp-zero-nvim;
-        type = "lua";
-        config = ''
-          local lsp = require("lsp-zero").preset({})
+      scrolloff = 8;
+      signcolumn = "yes";
+      isfname = [ "@-@" ];
 
-          lsp.on_attach(function(client, bufnr)
-            local opts = {buffer = bufnr, remap = false}
+      updatetime = 50;
 
-            vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-            vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-            vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-            vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-            vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-            vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-            vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-            vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-            vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-            vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-          end)
+      colorcolumn = "80";
+    };
 
-          -- When you don't have mason.nvim installed
-          -- You'll need to list the servers installed in your system
-          lsp.setup_servers({"lua_ls", "nil_ls", "bashls", "rust_analyzer"})
+    maps = {
+      normal."<leader>pv" = "vim.cmd.Ex";
 
-          -- (Optional) Configure lua language server for neovim
-          --require("lspconfig").lua_ls.setup(lsp.nvim_lua_ls())
+      visual."K" = ":m '<-2<CR>gv=gv";
+      visual."J" = ":m '>+1<CR>gv=gv";
 
-          lsp.setup()
+      normal."J" = "mzJ`z";
+      normal."<C-d>" = "<C-d>zz";
+      normal."<C-u>" = "<C-u>zz";
+      normal."n" = "nzzzv";
+      normal."N" = "Nzzzv";
 
-          vim.diagnostic.config({ virtual_text = true })
-        '';
-      }
+      # greatest remap ever
+      visualOnly."<leader>p" = "[[\"_dP]]";
 
-      # Adds a terminal to nvim
-      toggleterm-nvim
-    ];
-    extraLuaConfig = ''
-      vim.g.mapleader = " "
-      vim.g.maplocalleader = " "
+      # next greatest remap ever : asbjornHaland
+      normalVisualOp."<leader>y" = "[[\"+y]]";
+      normal."<leader>Y" = "[[\"+Y]]";
 
-      vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+      normalVisualOp."<leader>d" = "[[\"_d]]";
 
-      vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
-      vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+      insert."<C-c>" = "<Esc>";
 
-      vim.keymap.set("n", "J", "mzJ`z")
-      vim.keymap.set("n", "<C-d>", "<C-d>zz")
-      vim.keymap.set("n", "<C-u>", "<C-u>zz")
-      vim.keymap.set("n", "n", "nzzzv")
-      vim.keymap.set("n", "N", "Nzzzv")
+      normal."Q" = "<nop>";
+      normal."<C-f>" = "<cmd>silent !tmux neww tmux-sessionizer<CR>";
 
-      -- greatest remap ever
-      vim.keymap.set("x", "<leader>p", [["_dP]])
+      normal."<C-k>" = "<cmd>cnext<CR>zz";
+      normal."<C-j>" = "<cmd>cprev<CR>zz";
+      normal."<leader>k" = "<cmd>lnext<CR>zz";
+      normal."<leader>j" = "<cmd>lprev<CR>zz";
 
-      -- next greatest remap ever : asbjornHaland
-      vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
-      vim.keymap.set("n", "<leader>Y", [["+Y]])
+      normal."<leader>s" = "[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])";
+      normal."<leader>x" = {
+        action = "<cmd>!chmod +x %<CR>";
+        silent = true;
+      };
 
-      vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])
+      normal."<leader>u" = ":UndotreeToggle<CR>";
+      normal."<leader>gs" = ":Git<CR>";
+      insert."<C-h>" = "vim.lsp.buf.signature_help";
+    };
 
-      -- This is going to get me cancelled
-      vim.keymap.set("i", "<C-c>", "<Esc>")
+    colorschemes.nord = {
+      enable = true;
+      disable_background = true;
+      cursorline_transparent = false;
+    };
 
-      vim.keymap.set("n", "Q", "<nop>")
-      vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
-      vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+    plugins = {
+      telescope = {
+        enable = true;
+        keymaps = {
+          "<leader>pf" = "find_files";
+          "<C-p>" = "git_files";
+          "<leader>ps" = "grep_string";
+          "<leader>vh" = "help_tags";
+        };
+        extensions.fzf-native.enable = true;
+      };
 
-      vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-      vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-      vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-      vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+      treesitter = {
+        enable = true;
+        indent = true;
+        nixvimInjections = true;
+      };
+      treesitter-context.enable = true;
 
-      vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-      vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+      harpoon = {
+        enable = true;
+        keymaps = {
+          addFile = "<leader>a";
+          toggleQuickMenu = "<C-e>";
+          navFile = {
+            "1" = "<C-h>";
+            "2" = "<C-t>";
+            "3" = "<C-n>";
+            "4" = "<C-s>";
+          };
+        };
+      };
 
-      vim.keymap.set("n", "<leader><leader>", function()
-        vim.cmd("so")
-      end)
+      undotree = {
+        enable = true;
+        focusOnToggle = true;
+      };
 
-      vim.opt.guicursor = ""
+      fugitive.enable = true;
+      comment-nvim.enable = true;
 
-      vim.opt.nu = true
-      vim.opt.relativenumber = true
+      lsp = {
+        enable = true;
+        keymaps = {
+          diagnostic = {
+            "<leader>vd" = "open_float";
+            "[d" = "goto_next";
+            "]d" = "goto_prev";
+          };
+          lspBuf = {
+            "<leader>f" = "format";
+            "gd" = "definition";
+            "K" = "hover";
+            "<leader>vws" = "workspace_symbol";
+            "<leader>vca" = "code_action";
+            "<leader>vrr" = "references";
+            "<leader>vrn" = "rename";
+          };
+        };
 
-      vim.opt.tabstop = 4
-      vim.opt.softtabstop = 4
-      vim.opt.shiftwidth = 4
-      vim.opt.expandtab = true
+        servers.bashls.enable = true;
+        servers.nil_ls.enable = true;
+        servers.rust-analyzer.enable = true;
+        servers.tailwindcss.enable = true;
+      };
 
-      vim.opt.smartindent = true
-
-      vim.opt.wrap = false
-
-      vim.opt.swapfile = false
-      vim.opt.backup = false
-      vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-      vim.opt.undofile = true
-
-      vim.opt.hlsearch = false
-      vim.opt.incsearch = true
-
-      vim.opt.termguicolors = true
-
-      vim.opt.scrolloff = 8
-      vim.opt.signcolumn = "yes"
-      vim.opt.isfname:append("@-@")
-
-      vim.opt.updatetime = 50
-
-      vim.opt.colorcolumn = "80"
-    '';
-   };
+      fidget.enable = true;
+      nvim-cmp.enable = true;
+      cmp-buffer.enable = true;
+      cmp-path.enable = true;
+      cmp_luasnip.enable = true;
+      cmp-nvim-lsp.enable = true;
+      cmp-nvim-lua.enable = true;
+      luasnip.enable = true;
+    };
+  };
 }
-
