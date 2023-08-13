@@ -42,7 +42,7 @@
     };
 
     maps = {
-      normal."<leader>pv" = "vim.cmd.Ex";
+      normal."<leader>pv" = ":Ex<CR>";
 
       visual."K" = ":m '<-2<CR>gv=gv";
       visual."J" = ":m '>+1<CR>gv=gv";
@@ -83,10 +83,10 @@
       insert."<C-h>" = "vim.lsp.buf.signature_help";
     };
 
-    colorschemes.nord = {
+    colorschemes.kanagawa = {
       enable = true;
-      disable_background = true;
-      cursorline_transparent = false;
+      theme = "dragon";
+      transparent = true;
     };
 
     plugins = {
@@ -103,6 +103,7 @@
 
       treesitter = {
         enable = true;
+        ensureInstalled = "all";
         indent = true;
         nixvimInjections = true;
       };
