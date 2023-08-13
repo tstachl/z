@@ -36,32 +36,55 @@
       colors = {
         # Default colors
         primary = {
-          background = "#161821";
-          foreground = "#d2d4de";
+          # background = "#161821";
+          # foreground = "#d2d4de";
+          background = "#1f1f28";
+          foreground = "#dcd7ba";
         };
 
         # Normal colors
         normal = {
-          black = "#161821";
-          red = "#e27878";
-          green = "#b4be82";
-          yellow = "#e2a478";
-          blue = "#84a0c6";
-          magenta = "#a093c7";
-          cyan = "#89b8c2";
-          white = "#c6c8d1";
+          # black = "#161821";
+          # red = "#e27878";
+          # green = "#b4be82";
+          # yellow = "#e2a478";
+          # blue = "#84a0c6";
+          # magenta = "#a093c7";
+          # cyan = "#89b8c2";
+          # white = "#c6c8d1";
+          black = "#090618";
+          red = "#c34043";
+          green = "#76946a";
+          yellow = "#c0a36e";
+          blue = "#7e9cd8";
+          magenta = "#957fb8";
+          cyan = "#6a9589";
+          white = "#c8c093";
         };
 
         # Bright colors
         bright = {
-          black = "#6b7089";
-          red = "#e98989";
-          green = "#c0ca8e";
-          yellow = "#e9b189";
-          blue = "#91acd1";
-          magenta = "#ada0d3";
-          cyan = "#95c4ce";
-          white = "#d2d4de";
+          # black = "#6b7089";
+          # red = "#e98989";
+          # green = "#c0ca8e";
+          # yellow = "#e9b189";
+          # blue = "#91acd1";
+          # magenta = "#ada0d3";
+          # cyan = "#95c4ce";
+          # white = "#d2d4de";
+          black = "#727169";
+          red = "#e82424";
+          green = "#98bb6c";
+          yellow = "#e6c384";
+          blue = "#7fb4ca";
+          magenta = "#938aa9";
+          cyan = "#7aa89f";
+          white = "#dcd7ba";
+        };
+
+        selection = {
+          background = "#2d4f67";
+          foreground = "#c8c093";
         };
       };
 

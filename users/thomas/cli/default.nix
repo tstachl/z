@@ -7,8 +7,10 @@
     ./git.nix
     ./github.nix
     ./gnupg.nix
+    ./nvim.nix
     ./ssh.nix
     ./starship.nix
+    ./tmux.nix
     ./zsh.nix
   ];
 }
