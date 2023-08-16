@@ -42,7 +42,7 @@
     };
 
     maps = {
-      normal."<leader>pv" = ":Ex<CR>";
+      normal."<leader>e" = ":NvimTreeToggle<CR>";
 
       visual."K" = ":m '<-2<CR>gv=gv";
       visual."J" = ":m '>+1<CR>gv=gv";
@@ -90,6 +90,8 @@
     };
 
     plugins = {
+      tmux-navigator.enable = true;
+
       telescope = {
         enable = true;
         keymaps = {
@@ -108,6 +110,39 @@
         nixvimInjections = true;
       };
       treesitter-context.enable = true;
+
+      nvim-tree = {
+        enable = true;
+        autoClose = true;
+        disableNetrw = true;
+        extraOptions = {
+          renderer = {
+            root_folder_label = false;
+            icons = {
+              glyphs = {
+                default = "";
+                symlink = "";
+                git = {
+                  unstaged = "";
+                  staged = "S";
+                  unmerged = "";
+                  renamed = "➜";
+                  deleted = "";
+                  untracked = "U";
+                  ignored = "◌";
+                };
+                folder = {
+                  default = "";
+                  open = "";
+                  empty = "";
+                  empty_open = "";
+                  symlink = "";
+                };
+              };
+            };
+          };
+        };
+      };
 
       harpoon = {
         enable = true;
@@ -154,6 +189,7 @@
         servers.nil_ls.enable = true;
         servers.rust-analyzer.enable = true;
         servers.tailwindcss.enable = true;
+        servers.elixirls.enable = true;
       };
 
       fidget.enable = true;
