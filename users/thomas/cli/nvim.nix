@@ -80,7 +80,7 @@
 
       normal."<leader>u" = ":UndotreeToggle<CR>";
       normal."<leader>gs" = ":Git<CR>";
-      insert."<C-h>" = "vim.lsp.buf.signature_help";
+      insert."<C-h>" = "<cmd>:lua vim.lsp.buf.signature_help()<CR>";
     };
 
     colorschemes.kanagawa = {
