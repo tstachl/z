@@ -1,6 +1,8 @@
-{ inputs, config, ... }:
+{ inputs, config, pkgs, ... }:
 {
   imports = [ inputs.nixvim.homeManagerModules.nixvim ];
+
+  home.packages = with pkgs; [ ripgrep fd ];
 
   programs.nixvim = {
     enable = true;
@@ -42,7 +44,7 @@
     };
 
     maps = {
-      normal."<leader>e" = ":NvimTreeToggle<CR>";
+      # normal."<leader>e" = ":NvimTreeToggle<CR>";
 
       visual."K" = ":m '<-2<CR>gv=gv";
       visual."J" = ":m '>+1<CR>gv=gv";
@@ -95,7 +97,7 @@
       telescope = {
         enable = true;
         keymaps = {
-          "<leader>pf" = "find_files";
+          "<leader>e" = "find_files";
           "<C-p>" = "git_files";
           "<leader>ps" = "grep_string";
           "<leader>vh" = "help_tags";
@@ -112,8 +114,7 @@
       treesitter-context.enable = true;
 
       nvim-tree = {
-        enable = true;
-        autoClose = true;
+        enable = false;
         disableNetrw = true;
         extraOptions = {
           renderer = {
