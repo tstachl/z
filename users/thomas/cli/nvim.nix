@@ -44,7 +44,7 @@
     };
 
     maps = {
-      # normal."<leader>e" = ":NvimTreeToggle<CR>";
+      normal."<leader>t" = ":NvimTreeToggle<CR>";
 
       visual."K" = ":m '<-2<CR>gv=gv";
       visual."J" = ":m '>+1<CR>gv=gv";
@@ -96,6 +96,7 @@
 
       telescope = {
         enable = true;
+        extraOptions.pickers.find_files.follow = true;
         keymaps = {
           "<leader>e" = "find_files";
           "<C-p>" = "git_files";
@@ -114,7 +115,7 @@
       treesitter-context.enable = true;
 
       nvim-tree = {
-        enable = false;
+        enable = true;
         disableNetrw = true;
         extraOptions = {
           renderer = {
