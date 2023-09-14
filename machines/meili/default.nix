@@ -39,6 +39,8 @@
     onActivation.upgrade = true;
   };
 
+  users.users.thomas.packages = [ pkgs.discord ];
+
   networking = {
     hostName = "meili";
     remoteLogin = true;
