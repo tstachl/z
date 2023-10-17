@@ -43,7 +43,7 @@ in
     device = "/dev/disk/by-label/swap";
   }];
 
-  systemd.network.enable = true;
+  systemd.network.enable = false;
   systemd.network.networks."99-ethernet-default-dhcp" = {
     matchConfig.Name = "en*";
     linkConfig.RequiredForOnline = false;

@@ -1,4 +1,4 @@
-{ pkgs, outputs, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./hardware.nix
@@ -16,23 +16,8 @@
     ../common/users/thomas/nixos.nix
   ];
 
-  services.zerotier = {
-    enable = true;
-    networks = {
-      "${(outputs.lib.readSecret "stoic_krum")}" = {
-        allowDNS = true;
-        zeronsd = {
-          enable = true;
-          hosts = ''
-            1.1.1.1 cloudflare-dns
-          '';
-          domain = "t5.st";
-          token = "${outputs.lib.readSecret "zerotier"}";
-          wildcard = true;
-        };
-      };
-    };
-  };
+  networking.firewall.enable = false;
+  networking.firewall.allowedTCPPorts = [ 3000 24678 4000 ];
 
   environment.systemPackages = [ pkgs.dig ];
 
