@@ -1,7 +1,4 @@
-{ config, lib, modulesPath, ... }:
-let
-  inherit (config.networking) hostName;
-in
+{ modulesPath, ... }:
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
