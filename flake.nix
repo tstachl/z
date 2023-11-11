@@ -33,6 +33,11 @@
           path = ./templates/rust-toolchain;
           description = "a rust toolchain template";
         };
+
+        basic = {
+          path = ./templates/basic;
+          description = "a basic template to get started";
+        };
       };
 
       packages = forAllSystems (system:
