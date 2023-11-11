@@ -8,6 +8,7 @@
     ./github.nix
     ./gnupg.nix
     ./nvim.nix
+    ./spotdl.nix
     ./ssh.nix
     ./starship.nix
     ./tmux.nix

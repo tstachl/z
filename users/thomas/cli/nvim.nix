@@ -192,6 +192,7 @@
         servers.rust-analyzer.enable = true;
         servers.tailwindcss.enable = true;
         servers.elixirls.enable = true;
+        servers.vuels.enable = true;
       };
 
       fidget.enable = true;

@@ -6,6 +6,7 @@
   # nextdns = pkgs.callPackage ./nextdns.nix {};
   setup = pkgs.callPackage ./setup {};
   tmux-cht = pkgs.callPackage ./tmux-cht.nix {};
+  ttc = pkgs.callPackage ./ttc.nix {};
   hardtime-nvim = pkgs.callPackage ./hardtime-nvim.nix {};
   zeronsd = pkgs.callPackage ./zerotier/zeronsd.nix {};
   zerotier-systemd-manager = pkgs.callPackage ./zerotier/zerotier-systemd-manager.nix {};
