@@ -41,11 +41,13 @@
       mouse_action2 = "resize";
       mouse_drop_action = "swap";
     };
+
     extraConfig = ''
       # apps to not manage (ignore)
       yabai -m rule --add app="^System Settings$" manage=off
       yabai -m rule --add app="^Archive Utility$" manage=off
       yabai -m rule --add app="^Notes$" manage=off
+      yabai -m rule --add app="^ProtonVPN$" manage= off
       # yabai -m rule --add app="^Wally$" manage=off
       # yabai -m rule --add app="^Pika$" manage=off
       # yabai -m rule --add app="^balenaEtcher$" manage=off

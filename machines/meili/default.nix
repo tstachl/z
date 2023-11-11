@@ -15,14 +15,13 @@
     ../common/users/thomas/desktop.nix
   ];
 
-  users.users.thomas.packages = [ pkgs.ttc ];
-
   homebrew = {
     # orbot
     # p
     casks = [
       "alacritty"
       "brave-browser"
+      "docker"
       # "bitwarden"
       # "deepl"
       "ledger-live"
