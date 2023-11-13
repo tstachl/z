@@ -193,6 +193,7 @@
         servers.tailwindcss.enable = true;
         servers.elixirls.enable = true;
         servers.vuels.enable = true;
+        servers.tsserver.enable = true;
       };
 
       fidget.enable = true;
