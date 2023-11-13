@@ -43,6 +43,7 @@
       colorcolumn = "80";
     };
 
+    # need to update this to keymaps at some point
     maps = {
       normal."<leader>t" = ":NvimTreeToggle<CR>";
 
@@ -192,7 +193,7 @@
         servers.rust-analyzer.enable = true;
         servers.tailwindcss.enable = true;
         servers.elixirls.enable = true;
-        servers.vuels.enable = true;
+        servers.volar.enable = true;
         servers.tsserver.enable = true;
       };
 

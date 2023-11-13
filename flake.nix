@@ -6,12 +6,12 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/23.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     darwin.url = "github:lnl7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.url = "github:nix-community/nixvim/main";
-    # nixvim.inputs.nixpkgs.follows = "nixpkgs";
   };
+
 
   outputs = { self, nixpkgs, darwin, ... }@inputs:
     let
