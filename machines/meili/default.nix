@@ -1,9 +1,10 @@
-{ pkgs, ... }:
+{ ... }:
 {
   imports = [
     ../common/global
 
     ../common/optional/darwin.nix
+    ../common/optional/devenv.nix
     ../common/optional/fonts.nix
     ../common/optional/gnupg.nix
     # ../common/optional/openssh.nix
