@@ -189,12 +189,21 @@
         };
 
         servers.bashls.enable = true;
+        servers.denols = {
+          enable = true;
+          rootDir = ''
+            require('lspconfig').util.root_pattern("deno.json", "deno.jsonc")
+          '';
+        };
+        servers.elixirls.enable = true;
         servers.nil_ls.enable = true;
         servers.rust-analyzer.enable = true;
         servers.tailwindcss.enable = true;
-        servers.elixirls.enable = true;
+        servers.tsserver = {
+          enable = true;
+          autostart = false;
+        };
         servers.volar.enable = true;
-        servers.tsserver.enable = true;
       };
 
       fidget.enable = true;
