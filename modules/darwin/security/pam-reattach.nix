@@ -12,12 +12,15 @@ let
     sed = "${pkgs.gnused}/bin/sed";
   in ''
     ${if isEnabled then ''
-      # Eanble pam_reattach if not enabled
-      if ! grep 'pam_reattach.so' ${file} > /dev/null; then
-        ${sed} -i '2i\
-      # auth       optional       ${pkgs.pam-reattach}/lib/pam/pam_reattach.so ignore_ssh # nix-darwin: ${option}
-        ' ${file}
+      # If enable and in file, remove and re-add in case the store path has
+      # changed
+      if grep '${option}' ${file} > /dev/null; then
+        ${sed} -i '/${option}/d' ${file}
       fi
+
+      ${sed} -i '2i\
+      auth       optional       ${pkgs.pam-reattach}/lib/pam/pam_reattach.so ignore_ssh # nix-darwin: ${option}
+      ' ${file}
     '' else ''
       # Disable pam_reattach, if added by nix-darwin
       if grep '${option}' ${file} > /dev/null; then
