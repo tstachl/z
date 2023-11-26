@@ -43,26 +43,26 @@
       colorcolumn = "80";
     };
 
+    keymaps = [
+      { key = "<leader>t"; action = ":NvimTreeToggle<CR>"; mode = "n"; }
+
+      { key = "K"; action = ":m '<-2<CR>gv=gv"; mode = "v"; }
+      { key = "J"; action = ":m '>+1<CR>gv=gv"; mode = "v"; }
+
+      { key = "J"; action = "mzJ`z"; mode = "n"; }
+      { key = "<C-d>"; action = "<C-d>zz"; mode = "n"; }
+      { key = "<C-u>"; action = "<C-u>zz"; mode = "n"; }
+      { key = "n"; action = "nzzzv"; mode = "n"; }
+      { key = "N"; action = "Nzzzv"; mode = "n"; }
+
+      { key = "<leader>p"; action = "[[\"_dP]]"; mode = "v"; }
+
+      { key = "<leader>y"; action = "[[\"+y]]"; }
+      { key = "<leader>Y"; action = "[[\"+Y]]"; mode = "n"; }
+    ];
+
     # need to update this to keymaps at some point
     maps = {
-      normal."<leader>t" = ":NvimTreeToggle<CR>";
-
-      visual."K" = ":m '<-2<CR>gv=gv";
-      visual."J" = ":m '>+1<CR>gv=gv";
-
-      normal."J" = "mzJ`z";
-      normal."<C-d>" = "<C-d>zz";
-      normal."<C-u>" = "<C-u>zz";
-      normal."n" = "nzzzv";
-      normal."N" = "Nzzzv";
-
-      # greatest remap ever
-      visualOnly."<leader>p" = "[[\"_dP]]";
-
-      # next greatest remap ever : asbjornHaland
-      normalVisualOp."<leader>y" = "[[\"+y]]";
-      normal."<leader>Y" = "[[\"+Y]]";
-
       normalVisualOp."<leader>d" = "[[\"_d]]";
 
       insert."<C-c>" = "<Esc>";
@@ -171,6 +171,12 @@
 
       lsp = {
         enable = true;
+        onAttach = ''
+          if client.server_capabilities.inlayHintProvider then
+            vim.lsp.buf.inlay_hint(bufnr, true)
+          end
+        '';
+
         keymaps = {
           diagnostic = {
             "<leader>vd" = "open_float";
