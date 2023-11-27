@@ -59,22 +59,20 @@
 
       { key = "<leader>y"; action = "[[\"+y]]"; }
       { key = "<leader>Y"; action = "[[\"+Y]]"; mode = "n"; }
+      { key = "<leader>d"; action = "[[\"_d]]"; }
+
+      { key = "<C-c>"; action = "<Esc>"; mode = "i"; }
+
+      { key = "Q"; action = "<nop>"; mode = "n"; }
+
+      { key = "<C-k>"; action = "<cmd>cnext<CR>zz"; mode = "n"; }
+      { key = "<C-j>"; action = "<cmd>cprev<CR>zz"; mode = "n"; }
+      { key = "<leader>k"; action = "<cmd>lnext<CR>zz"; mode = "n"; }
+      { key = "<leader>j"; action = "<cmd>lprev<CR>zz"; mode = "n"; }
     ];
 
     # need to update this to keymaps at some point
     maps = {
-      normalVisualOp."<leader>d" = "[[\"_d]]";
-
-      insert."<C-c>" = "<Esc>";
-
-      normal."Q" = "<nop>";
-      normal."<C-f>" = "<cmd>silent !tmux neww tmux-sessionizer<CR>";
-
-      normal."<C-k>" = "<cmd>cnext<CR>zz";
-      normal."<C-j>" = "<cmd>cprev<CR>zz";
-      normal."<leader>k" = "<cmd>lnext<CR>zz";
-      normal."<leader>j" = "<cmd>lprev<CR>zz";
-
       normal."<leader>s" = "[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])";
       normal."<leader>x" = {
         action = "<cmd>!chmod +x %<CR>";
@@ -205,10 +203,7 @@
         servers.nil_ls.enable = true;
         servers.rust-analyzer.enable = true;
         servers.tailwindcss.enable = true;
-        servers.tsserver = {
-          enable = true;
-          autostart = false;
-        };
+        servers.tsserver.enable = true;
         servers.volar.enable = true;
       };
 
