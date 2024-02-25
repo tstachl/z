@@ -30,6 +30,12 @@
           bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
         '';
       }
+      {
+        plugin = resurrect;
+        extraConfig = ''
+          set -g @resurrect-processes '"~nvim ."'
+        '';
+      }
     ];
 
     extraConfig = ''

@@ -69,20 +69,29 @@
       { key = "<C-j>"; action = "<cmd>cprev<CR>zz"; mode = "n"; }
       { key = "<leader>k"; action = "<cmd>lnext<CR>zz"; mode = "n"; }
       { key = "<leader>j"; action = "<cmd>lprev<CR>zz"; mode = "n"; }
-    ];
 
-    # need to update this to keymaps at some point
-    maps = {
-      normal."<leader>s" = "[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])";
-      normal."<leader>x" = {
+      {
+        key = "<leader>s";
+        action = "[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])";
+        mode = "n";
+      }
+
+      {
+        key = "<leader>x";
         action = "<cmd>!chmod +x %<CR>";
-        silent = true;
-      };
+        options.silent = true;
+        mode = "n";
+      }
 
-      normal."<leader>u" = ":UndotreeToggle<CR>";
-      normal."<leader>gs" = ":Git<CR>";
-      insert."<C-h>" = "<cmd>:lua vim.lsp.buf.signature_help()<CR>";
-    };
+      { key = "<leader>u"; action = ":UndotreeToggle<CR>"; mode = "n"; }
+      { key = "<leader>gs"; action = ":Git<CR>"; mode = "n"; }
+      {
+        key = "<C-h>";
+        lua = true;
+        action = "vim.lsp.buf.signature_help";
+        mode = "i";
+      }
+    ];
 
     colorschemes.kanagawa = {
       enable = true;
@@ -196,15 +205,30 @@
         servers.denols = {
           enable = true;
           rootDir = ''
-            require('lspconfig').util.root_pattern("deno.json", "deno.jsonc")
+            require('lspconfig').util.root_pattern("deno.json")
           '';
+          extraOptions.init_options = {
+            lint = true;
+            unstable = true;
+          };
         };
         servers.elixirls.enable = true;
         servers.nil_ls.enable = true;
         servers.rust-analyzer.enable = true;
         servers.tailwindcss.enable = true;
-        servers.tsserver.enable = true;
-        servers.volar.enable = true;
+        servers.tsserver = {
+          enable = true;
+          extraOptions.single_file_support = false;
+          rootDir = ''
+            require('lspconfig').util.root_pattern("tsconfig.json")
+          '';
+        };
+        servers.volar = {
+          enable = true;
+          rootDir = ''
+            require('lspconfig').util.root_pattern("vite.config.mts")
+          '';
+        };
       };
 
       fidget.enable = true;
@@ -215,6 +239,8 @@
       cmp-nvim-lsp.enable = true;
       cmp-nvim-lua.enable = true;
       luasnip.enable = true;
+
+      trouble.enable = true;
     };
   };
 }
