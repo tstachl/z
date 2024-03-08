@@ -36,8 +36,10 @@
       "Bitwarden" = 1352778147;
       "Tailscale" = 1475387142;
       "Yubico Authenticator" = 1497506650;
-      # # "UTM Virtual Machines" = 1538878817; costs $9.99 in the app store
-      "Speechify" = 1624912180;
+      # "UTM Virtual Machines" = 1538878817; costs $9.99 in the app store
+      # "Speechify" = 1624912180;
+      "DaVinci Resolve" = 571213070;
+      "Orbot" = 1609461599;
 
       # Safari Extensions
       "AdGuard for Safari" = 1440147259;
@@ -46,6 +48,7 @@
       "Video Speed Controller" = 1588368612;
       "Vimari" = 1480933944;
     };
+
     enable = true;
     # onActivation.cleanup = "zap";
     onActivation.upgrade = true;
