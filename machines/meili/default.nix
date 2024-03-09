@@ -16,6 +16,8 @@
     ../common/users/thomas/desktop.nix
   ];
 
+  nix.linux-builder.enable = true;
+
   homebrew = {
     # orbot
     # p
