@@ -44,7 +44,9 @@
 
       packages = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./pkgs { inherit pkgs; }
+        in import ./pkgs { inherit pkgs; } // {
+          stingVM = self.nixosConfigurations.sting.config.system.build.vm;
+        }
       );
 
       overlays = import ./overlays { inherit inputs; };
@@ -53,29 +55,9 @@
       homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {
-        simple = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; inherit outputs; };
-          modules = [
-            ./machines/simple
-            {
-              virtualisation.vmVariant.virtualisation = {
-                graphics = false;
-                host.pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-              };
-            }
-          ];
-        };
-
         sting = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/sting ];
-        };
-
-        sdcard = nixpkgs.lib.nixosSystem {
-          modules = [
-            "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
-            ./machines/sting/sd-card.nix
-          ];
         };
       };
 
