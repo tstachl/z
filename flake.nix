@@ -55,7 +55,15 @@
       nixosConfigurations = {
         simple = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
-          modules = [ ./machines/simple ];
+          modules = [
+            ./machines/simple
+            {
+              virtualisation.vmVariant.virtualisation = {
+                graphics = false;
+                host.pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+              };
+            }
+          ];
         };
 
         sting = nixpkgs.lib.nixosSystem {
