@@ -6,6 +6,7 @@
     ./system/caddy.nix
     # ./system/nginx.nix
 
+    ./services/avahi.nix
     # ./services/tailscale.nix
     ./services/openssh.nix
     ./services/test.nix
