@@ -1,4 +1,4 @@
-{  modulesPath, inputs, ... }:
+{  modulesPath, ... }:
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -11,7 +11,7 @@
     };
 
     kernelModules = [ ];
-    kernelParams = [ "console=tty1" "console=ttyS0,115200" ];
+    # kernelParams = [ "console=tty1" "console=ttyS0,115200" ];
     extraModulePackages = [ ];
 
     loader = {
@@ -36,6 +36,9 @@
       fsType = "vfat";
     };
   };
+
+  swapDevices = [];
+  networking.useDHCP = true;
 
   nixpkgs.hostPlatform = "aarch64-linux";
 }
