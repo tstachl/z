@@ -27,6 +27,7 @@
 
   # TODO(@tstachl): currently needed to run as a virtual machine
   virtualisation.vmVariant.virtualisation = {
+    diskSize = 20000;
     graphics = false;
     host.pkgs = inputs.nixpkgs.legacyPackages.aarch64-darwin;
     libvirtd.enable = true;

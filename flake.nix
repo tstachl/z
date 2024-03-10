@@ -14,7 +14,6 @@
     nixvim.url = "github:nix-community/nixvim/main";
   };
 
-
   outputs = { self, nixpkgs, darwin, ... }@inputs:
     let
       inherit (self) outputs;
@@ -44,9 +43,7 @@
 
       packages = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./pkgs { inherit pkgs; } // {
-          stingVM = self.nixosConfigurations.sting.config.system.build.vm;
-        }
+        in import ./pkgs { inherit pkgs; }
       );
 
       overlays = import ./overlays { inherit inputs; };
