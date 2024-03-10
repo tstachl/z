@@ -25,12 +25,11 @@
     };
   };
 
-  # TODO(@tstachl): currently needed to run as a virtual machine
-  virtualisation.vmVariant.virtualisation = {
-    diskSize = 20000;
-    graphics = false;
-    host.pkgs = inputs.nixpkgs.legacyPackages.aarch64-darwin;
-    libvirtd.enable = true;
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-label/nixos";
+      fsType = "ext4";
+    };
   };
 
   nixpkgs.hostPlatform = "aarch64-linux";
