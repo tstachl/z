@@ -16,8 +16,9 @@
     ../common/users/thomas/nixos.nix
   ];
 
-  networking.firewall.enable = false;
-  networking.firewall.allowedTCPPorts = [ 3000 24678 4000 ];
+  # this is only a vm
+  services.getty.autologinUser = "thomas";
+  security.sudo.wheelNeedsPassword = false;
 
   environment.systemPackages = [ pkgs.dig ];
 

@@ -2,7 +2,7 @@
   imports = [
     ./alacritty.nix
     ./fonts.nix
-    # ./syncthing.nix
+    ./syncthing.nix
     ./yubikey.nix
   ];
 }

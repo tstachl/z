@@ -1,8 +1,8 @@
-{ ... }:
 {
   imports = [
     ../common/global
 
+    ../common/optional/cachix.nix
     ../common/optional/darwin.nix
     ../common/optional/devenv.nix
     ../common/optional/fonts.nix
@@ -16,11 +16,9 @@
     ../common/users/thomas/desktop.nix
   ];
 
-  nix.linux-builder.enable = true;
-
   homebrew = {
-    # orbot
-    # p
+    taps = [ "homebrew/cask" ];
+
     casks = [
       "alacritty"
       "brave-browser"
@@ -28,10 +26,13 @@
       # "bitwarden"
       # "deepl"
       "ledger-live"
-      "mouse-fix"
+      "mac-mouse-fix"
+      "mullvadvpn"
       "openaudible"
-      "protonvpn"
+      # "protonvpn"
       "whatsapp"
+
+      # "krunkit"
     ];
 
     masApps = {
@@ -60,6 +61,7 @@
     hostName = "meili";
     remoteLogin = true;
   };
+
   time.timeZone = "America/Lima";
   system.stateVersion = 4;
 }

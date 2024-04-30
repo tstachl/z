@@ -1,6 +1,6 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 {
-  environment.systemPackages = with pkgs; [
-    inputs.devenv.packages.${system}.devenv
+  environment.systemPackages = [
+    pkgs.unstable.devenv
   ];
 }

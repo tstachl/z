@@ -100,6 +100,7 @@
     };
 
     plugins = {
+      auto-session.enable = true;
       tmux-navigator.enable = true;
 
       telescope = {

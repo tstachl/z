@@ -1,4 +1,4 @@
-{ modulesPath, ... }:
+{ modulesPath, inputs, ... }:
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -25,30 +25,29 @@
     };
   };
 
-  fileSystems = {
-    "/boot" = {
-      device = "/dev/disk/by-label/boot";
-      fsType = "vfat";
-    };
+  # fileSystems = {
+  #   "/boot" = {
+  #     device = "/dev/disk/by-label/boot";
+  #     fsType = "vfat";
+  #   };
+  #
+  #   "/" = {
+  #     device = "/dev/disk/by-label/nixos";
+  #     fsType = "ext4";
+  #   };
+  # };
+  #
+  # swapDevices = [{
+  #   device = "/dev/disk/by-label/swap";
+  # }];
 
-    "/" = {
-      device = "/dev/disk/by-label/nixos";
-      fsType = "ext4";
-    };
-  };
+  # virtualisation.vmVariant = {
+  #   virtualisation.graphics = false;
+  #   virtualisation.host.pkgs = inputs.nixpkgs.legacyPackages.aarch64-darwin;
+  # };
 
-  swapDevices = [{
-    device = "/dev/disk/by-label/swap";
-  }];
-
-  systemd.network.enable = false;
-  systemd.network.networks."99-ethernet-default-dhcp" = {
-    matchConfig.Name = "en*";
-    linkConfig.RequiredForOnline = false;
-
-    networkConfig.DHCP = "yes";
-    networkConfig.IPv6PrivacyExtensions = "kernel";
-  };
+  networking.useDHCP = false;
+  networking.interfaces.eth0.useDHCP = true;
 
   nixpkgs.hostPlatform = "aarch64-linux";
 }
