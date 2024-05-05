@@ -215,7 +215,11 @@
         };
         servers.elixirls.enable = true;
         servers.nil_ls.enable = true;
-        servers.rust-analyzer.enable = true;
+        servers.rust-analyzer = {
+          enable = true;
+          installCargo = true;
+          installRustc = true;
+        };
         servers.tailwindcss.enable = true;
         servers.tsserver = {
           enable = true;

@@ -12,6 +12,7 @@ in
     package = lib.mkDefault pkgs.nixFlakes;
 
     settings = {
+      trusted-users = [ "thomas" ];
       experimental-features = [ "nix-command" "flakes" "repl-flake" ];
       warn-dirty = false;
     };
