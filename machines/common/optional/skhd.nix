@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  environment.systemPackages = with pkgs; [ skhd yabai jq alacritty ];
+  environment.systemPackages = with pkgs; [ skhd ];
 
   services.skhd = {
     enable = true;

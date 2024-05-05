@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   imports = [
     ../common/global
@@ -15,6 +16,8 @@
     ../common/users/thomas
     ../common/users/thomas/desktop.nix
   ];
+
+  environment.systemPackages = with pkgs; [ jq alacritty ];
 
   homebrew = {
     taps = [ "homebrew/cask" ];
@@ -53,7 +56,6 @@
     };
 
     enable = true;
-    # onActivation.cleanup = "zap";
     onActivation.upgrade = true;
   };
 
@@ -62,6 +64,6 @@
     remoteLogin = true;
   };
 
-  time.timeZone = "America/Lima";
+  time.timeZone = "America/Los_Angeles";
   system.stateVersion = 4;
 }
