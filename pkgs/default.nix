@@ -4,6 +4,7 @@
   # devenv = pkgs.callPackage ./devenv {};
   drizzle-kit = pkgs.callPackage ./drizzle-kit {};
   geekworm-xscript = pkgs.callPackage ./geekworm-xscript.nix {};
+  ghost-cli = pkgs.callPackage ./ghost-cli.nix {};
   libsql = pkgs.callPackage ./libsql.nix {};
   m4b-organize = pkgs.callPackage ./m4b-organize.nix {};
   # nextdns = pkgs.callPackage ./nextdns.nix {};
