@@ -4,13 +4,13 @@
 
 let
   pname = "ghost-cli";
-  version = "1.25.3";
+  version = "1.26.0";
 
   src = fetchFromGitHub {
     owner = "tryghost";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-hlgGOV3FFnHzyOfLG/hcXTzOTHiVhNLW6Fz0lethezM=";
+    sha256 = "sha256-6yHP08bZuveASDuY9CyvaM6u/+d8h5EiamvUWbHrvgM=";
   };
 in
 
