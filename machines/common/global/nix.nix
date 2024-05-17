@@ -1,4 +1,4 @@
-{ pkgs, lib, config, outputs, ... }:
+{ lib, config, outputs, ... }:
 {
   nix = {
     settings = {
@@ -12,7 +12,7 @@
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       ];
 
-      trusted-users = [ "root" "@wheel" ];
+      trusted-users = [ "root" "@wheel" "thomas" ];
       auto-optimise-store = lib.mkDefault true;
     };
 

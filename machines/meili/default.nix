@@ -23,6 +23,11 @@
     jq
   ];
 
+  # TODO: this should go into a module and be added when homebrew is enabled
+  environment.shellInit = ''
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  '';
+
   homebrew = {
     taps = [ "homebrew/cask" ];
 
