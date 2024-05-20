@@ -191,6 +191,7 @@
             "[d" = "goto_next";
             "]d" = "goto_prev";
           };
+
           lspBuf = {
             "<leader>f" = "format";
             "gd" = "definition";
@@ -202,37 +203,47 @@
           };
         };
 
-        servers.bashls.enable = true;
-        servers.denols = {
-          enable = true;
-          rootDir = ''
-            require('lspconfig').util.root_pattern("deno.json")
-          '';
-          extraOptions.init_options = {
-            lint = true;
-            unstable = true;
+        servers = {
+          bashls.enable = true;
+
+          denols = {
+            enable = true;
+            rootDir = ''
+              require('lspconfig').util.root_pattern("deno.json")
+            '';
+            extraOptions.init_options = {
+              lint = true;
+              unstable = true;
+            };
           };
-        };
-        servers.elixirls.enable = true;
-        servers.nil_ls.enable = true;
-        servers.rust-analyzer = {
-          enable = true;
-          installCargo = true;
-          installRustc = true;
-        };
-        servers.tailwindcss.enable = true;
-        servers.tsserver = {
-          enable = true;
-          extraOptions.single_file_support = false;
-          rootDir = ''
-            require('lspconfig').util.root_pattern("tsconfig.json")
-          '';
-        };
-        servers.volar = {
-          enable = true;
-          rootDir = ''
-            require('lspconfig').util.root_pattern("vite.config.mts")
-          '';
+
+          elixirls.enable = true;
+          elixirls.package = pkgs.unstable.elixir-ls;
+
+          nil_ls.enable = true;
+
+          rust-analyzer = {
+            enable = true;
+            installCargo = true;
+            installRustc = true;
+          };
+
+          tailwindcss.enable = true;
+
+          tsserver = {
+            enable = true;
+            extraOptions.single_file_support = false;
+            rootDir = ''
+              require('lspconfig').util.root_pattern("tsconfig.json")
+            '';
+          };
+
+          volar = {
+            enable = true;
+            rootDir = ''
+              require('lspconfig').util.root_pattern("vite.config.mts")
+            '';
+          };
         };
       };
 
