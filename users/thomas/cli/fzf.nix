@@ -1,21 +1,18 @@
 { pkgs, ... }:
-let
-  defaultOptions = [
-    "--strip-cwd-prefix"
-    "--hidden"
-    "--exclude .git"
-  ];
-in
 {
   home.packages = with pkgs; [ fd ];
 
-  programs.fzf = {
+  programs.fzf = rec {
     enable = true;
-    changeDirWidgetCommand = "${pkgs.fd}/bin/fd";
+    changeDirWidgetCommand = defaultCommand;
     changeDirWidgetOptions = [ "--type=d" ] ++ defaultOptions;
     defaultCommand = "${pkgs.fd}/bin/fd";
-    defaultCommandOptions = defaultOptions;
-    fileWidgetCommand = "${pkgs.fd}/bin/fd";
+    defaultOptions = [
+      "--strip-cwd-prefix"
+      "--hidden"
+      "--exclude .git"
+    ];
+    fileWidgetCommand = defaultCommand;
     fileWidgetOptions = [ "--type=f" ] ++ defaultOptions;
     tmux.enableShellIntegration = true;
   };
