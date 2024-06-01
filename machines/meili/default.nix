@@ -29,8 +29,6 @@
   '';
 
   homebrew = {
-    taps = [ "homebrew/cask" ];
-
     casks = [
       "alacritty"
       # "brave-browser"
@@ -42,7 +40,7 @@
       "mullvadvpn"
       "openaudible"
       # "protonvpn"
-      "whatsapp"
+      # "whatsapp"
       # "krunkit"
     ];
 
@@ -63,7 +61,7 @@
     };
 
     enable = true;
-    onActivation.upgrade = true;
+    onActivation.cleanup = "zap";
   };
 
   networking = {
