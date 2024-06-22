@@ -8,6 +8,8 @@ in
     ../../optional/fish.nix
   ];
 
+  environment.shells = [ pkgs.fish ];
+
   users.users.thomas =  {
     home = lib.mkDefault "${homeLocation}/thomas";
     shell = pkgs.fish;

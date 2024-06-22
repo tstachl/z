@@ -9,7 +9,7 @@
 
     globals.mapleader = " ";
 
-    options = {
+    opts = {
       guicursor = "";
 
       number = true;
@@ -87,16 +87,15 @@
       { key = "<leader>gs"; action = ":Git<CR>"; mode = "n"; }
       {
         key = "<C-h>";
-        lua = true;
-        action = "vim.lsp.buf.signature_help";
+        action.__raw = "vim.lsp.buf.signature_help";
         mode = "i";
       }
     ];
 
     colorschemes.kanagawa = {
       enable = true;
-      theme = "dragon";
-      transparent = true;
+      settings.theme = "dragon";
+      settings.transparent = true;
     };
 
     plugins = {
@@ -105,11 +104,12 @@
 
       telescope = {
         enable = true;
-        extraOptions.pickers.find_files.follow = true;
+        settings.pickers.find_files.follow = true;
         keymaps = {
           "<leader>e" = "find_files";
           "<C-p>" = "git_files";
           "<leader>ps" = "grep_string";
+          "<leader>lg" = "live_grep";
           "<leader>vh" = "help_tags";
         };
         extensions.fzf-native.enable = true;
@@ -171,11 +171,11 @@
 
       undotree = {
         enable = true;
-        focusOnToggle = true;
+        settings.FocusOnToggle = true;
       };
 
       fugitive.enable = true;
-      comment-nvim.enable = true;
+      comment.enable = true;
 
       lsp = {
         enable = true;
@@ -220,7 +220,7 @@
           elixirls.enable = true;
           elixirls.package = pkgs.unstable.elixir-ls;
 
-          nil_ls.enable = true;
+          nil-ls.enable = true;
 
           rust-analyzer = {
             enable = true;
@@ -248,7 +248,7 @@
       };
 
       fidget.enable = true;
-      nvim-cmp.enable = true;
+      cmp.enable = true;
       cmp-buffer.enable = true;
       cmp-path.enable = true;
       cmp_luasnip.enable = true;

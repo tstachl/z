@@ -39,6 +39,7 @@
       "mac-mouse-fix"
       "mullvadvpn"
       "openaudible"
+      "tor-browser"
       # "protonvpn"
       # "whatsapp"
       # "krunkit"
@@ -61,6 +62,7 @@
     };
 
     enable = true;
+    onActivation.autoUpdate = true;
     onActivation.cleanup = "zap";
   };
 

@@ -10,19 +10,7 @@ in
 
   nix = {
     package = lib.mkDefault pkgs.nixFlakes;
-
-    settings = {
-      trusted-users = [ "thomas" ];
-      experimental-features = [ "nix-command" "flakes" "repl-flake" ];
-      warn-dirty = false;
-    };
-
-    extraOptions = ''
-    auto-optimise-store = true
-    experimental-features = nix-command flakes
-    '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
-      extra-platforms = x86_64-darwin aarch64-darwin
-    '';
+    settings.trusted-users = [ "thomas" ];
   };
 
   manual.manpages.enable = false;
@@ -35,6 +23,6 @@ in
       EDITOR = "${pkgs.neovim}/bin/nvim";
       SHELL = "${pkgs.fish}/bin/fish";
     };
-    stateVersion = lib.mkDefault "23.05";
+    stateVersion = lib.mkDefault "24.05";
   };
 }
