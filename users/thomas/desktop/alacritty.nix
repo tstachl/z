@@ -10,8 +10,6 @@
         TERM = "xterm-256color";
       };
 
-      TERM = "alacritty";
-
       font = {
         normal = {
           family = "FiraCode Nerd Font";
@@ -108,7 +106,7 @@
         args = [ "--login" ];
       };
 
-      key_bindings = [
+      keyboard.bindings = [
        { key = "Space"; mods = "Shift"; mode = "~Search"; action = "ToggleViMode"; }
 
         # TODO: figure out why I set these
@@ -153,8 +151,6 @@
         # { key = "Key8"; mods = "Alt"; chars = "•"; }
         # { key = "Key9"; mods = "Alt"; chars = "ª"; }
       ];
-
-      mouse = { hints = { launcher= "None"; }; };
     };
   };
 }

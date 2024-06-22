@@ -2,20 +2,27 @@
 {
   programs.bat = {
     enable = true;
-    config = { theme = "Kanagawa"; };
+    config = { theme = "kanagawa"; };
     themes = {
-      nord = builtins.readFile (pkgs.fetchFromGitHub {
-        owner = "crabique";
-        repo = "Nord-plist";
-        rev = "0d655b23d6b300e691676d9b90a68d92b267f7ec";
-        sha256 = "sha256-YUogcLO+W1hD0X/nsworGS1SHsOolp/g9N0rQJ/Q5wc=";
-      } + "/Nord.tmTheme");
-      kanagawa = builtins.readFile (pkgs.fetchFromGitHub {
-        owner = "codeandgin";
-        repo = "kanagawa-sublime-text";
-        rev = "0b4979a6837c0ca626965d42402f1a5332df521a";
-        sha256 = "sha256-C8OoMcVX11KK/yKQE6/WFIL9bcLxh0m3PdtvTp3FS2k=";
-      } + "/kanagawa.sublime-color-scheme");
+      nord = {
+        src = pkgs.fetchFromGitHub {
+          owner = "crabique";
+          repo = "Nord-plist";
+          rev = "0d655b23d6b300e691676d9b90a68d92b267f7ec";
+          sha256 = "sha256-YUogcLO+W1hD0X/nsworGS1SHsOolp/g9N0rQJ/Q5wc=";
+        };
+        file = "/Nord.tmTheme";
+      };
+
+      kanagawa = {
+        src = pkgs.fetchFromGitHub {
+          owner = "rebelot";
+          repo = "kanagawa.nvim";
+          rev = "7b411f9e66c6f4f6bd9771f3e5affdc468bcbbd2";
+          sha256 = "sha256-kV+hNZ9tgC8bQi4pbVWRcNyQib0+seQrrFnsg7UMdBE=";
+        };
+        file = "/extras/kanagawa.tmTheme";
+      };
     };
   };
 }
