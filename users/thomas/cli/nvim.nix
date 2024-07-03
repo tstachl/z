@@ -102,6 +102,18 @@
       auto-session.enable = true;
       tmux-navigator.enable = true;
 
+      # NOTE: Going to start out using the mac app first
+      # obsidian = {
+      #   enable = true;
+      #   settings = {
+      #     new_notes_location = "notes_subdir";
+      #     notes_subdir = "~/Documents/Notes/6 - Full Notes";
+      #     workspaces = [
+      #       { name = "personal"; path = "~/Documents/Notes"; }
+      #     ];
+      #   };
+      # };
+
       telescope = {
         enable = true;
         settings.pickers.find_files.follow = true;
@@ -155,26 +167,6 @@
         };
       };
 
-      harpoon = {
-        enable = true;
-        keymaps = {
-          addFile = "<leader>a";
-          toggleQuickMenu = "<C-e>";
-          navFile = {
-            "1" = "<C-h>";
-            "2" = "<C-t>";
-            "3" = "<C-n>";
-            "4" = "<C-s>";
-          };
-        };
-      };
-
-      undotree = {
-        enable = true;
-        settings.FocusOnToggle = true;
-      };
-
-      fugitive.enable = true;
       comment.enable = true;
 
       lsp = {

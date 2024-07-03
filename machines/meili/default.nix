@@ -38,6 +38,7 @@
       # "ledger-live"
       "mac-mouse-fix"
       "mullvadvpn"
+      "obsidian"
       "openaudible"
       "tor-browser"
       # "protonvpn"

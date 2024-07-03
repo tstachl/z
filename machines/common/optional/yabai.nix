@@ -48,6 +48,7 @@
       yabai -m rule --add app="^System Settings$" manage=off
       yabai -m rule --add app="^Archive Utility$" manage=off
       yabai -m rule --add app="^Notes$" manage=off
+      yabai -m rule --add app="^Obsidian$" manage=off
       yabai -m rule --add app="^ProtonVPN$" manage=off
       # yabai -m rule --add app="^Wally$" manage=off
       # yabai -m rule --add app="^Pika$" manage=off
