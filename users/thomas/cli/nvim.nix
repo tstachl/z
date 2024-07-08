@@ -18,10 +18,10 @@
     globals.mapleader = " ";
 
     keymaps = [
-      { key = "<leader>pv"; action = ":Explore"; mode = "n"; }
+      { key = "<leader>pv"; action = ":Explore<cr>"; mode = "n"; }
 
-      { key = "K"; action = ":m '<-2<CR>gv=gv"; mode = "v"; }
-      { key = "J"; action = ":m '>+1<CR>gv=gv"; mode = "v"; }
+      { key = "K"; action = ":m '<-2<cr>gv=gv"; mode = "v"; }
+      { key = "J"; action = ":m '>+1<cr>gv=gv"; mode = "v"; }
 
       { key = "J"; action = "mzJ`z"; mode = "n"; }
       { key = "<C-d>"; action = "<C-d>zz"; mode = "n"; }
