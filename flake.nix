@@ -11,9 +11,17 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.url = "github:nix-community/nixvim/nixos-24.05";
     # nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    devenv.url = "github:cachix/devenv";
+    devenv.inputs.nixpkgs.follows = "nixpkgs";
+    mynixvim.url = "github:tstachl/mynixvim";
   };
 
-  outputs = { self, nixpkgs, darwin, ... }@inputs:
+  nixConfig = {
+    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
+    extra-substituters = "https://devenv.cachix.org";
+  };
+
+  outputs = { self, nixpkgs, darwin, devenv, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -86,9 +94,15 @@
       #   };
       # };
 
-      devShell = forAllSystems(system:
+      devShells = forAllSystems(system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in pkgs.mkShell { buildInputs = with pkgs; [ lua-language-server nil nodePackages.bash-language-server ]; }
+        in
+        {
+          default = devenv.lib.mkShell {
+            inherit inputs pkgs;
+            modules = [ ./devenv.nix ];
+          };
+        }
       );
     };
 }
