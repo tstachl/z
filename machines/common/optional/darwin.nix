@@ -7,6 +7,12 @@
   services.nix-daemon.enable = true;
   programs.nix-index.enable = true;
 
+  # TODO: needs a mkIf linux-builder is enabled
+  launchd.daemons.linux-builder.serviceConfig = {
+    StandardOutPath = "/var/log/darwin-builder.log";
+    StandardErrorPath = "/var/log/darwin-builder.log";
+  };
+
   system = {
     keyboard = {
       enableKeyMapping = true;
