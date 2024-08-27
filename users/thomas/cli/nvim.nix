@@ -1,6 +1,10 @@
 { inputs, pkgs, ... }:
 {
-  home.packages = [ inputs.mynixvim.packages.${pkgs.system}.editor ];
+  home.packages = [
+    pkgs.prettierd
+    pkgs.eslint_d
+    inputs.nixvim.packages.${pkgs.system}.editor
+  ];
 
   #   extraPlugins = with pkgs.vimPlugins; [ wrapping-nvim ];
   #   extraConfigLua = ''

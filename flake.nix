@@ -4,16 +4,15 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nixvim.url = "github:nix-community/nixvim/nixos-24.05";
-    # nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
-    mynixvim.url = "github:tstachl/mynixvim";
+    nixvim.url = "github:tstachl/mynixvim/master";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
   nixConfig = {
@@ -52,6 +51,7 @@
         let pkgs = nixpkgs.legacyPackages.${system};
         in import ./pkgs { inherit pkgs; } // {
           simpleVM = self.nixosConfigurations.simple.config.system.build.vm;
+          odinSD = self.nixosConfigurations.odin-sdcard.config.system.build.sdImage;
         }
       );
 
@@ -74,6 +74,11 @@
         stingos-installer = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/sting/installer.nix ];
+        };
+
+        odin-sdcard = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; inherit outputs; };
+          modules = [ ./machines/odin/sdcard.nix ];
         };
       };
 

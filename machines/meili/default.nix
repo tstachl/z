@@ -19,6 +19,7 @@
 
   environment.systemPackages = with pkgs; [
     pkgs.unstable.arc-browser
+    # pkgs.unstable.zed-editor
     alacritty
     jq
   ];
@@ -36,12 +37,11 @@
       # "bitwarden"
       # "deepl"
       # "ledger-live"
-      "mac-mouse-fix"
       "mullvadvpn"
       "obsidian"
       "openaudible"
       "tor-browser"
-      # "protonvpn"
+      "protonvpn"
       # "whatsapp"
       # "krunkit"
     ];
