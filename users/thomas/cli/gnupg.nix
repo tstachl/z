@@ -1,12 +1,13 @@
 { config, pkgs, ... }:
 let
   inherit (config.xdg) configHome;
+  homeVariables = with pkgs.stdenv.hostPlatform;
+    if isDarwin then { SSH_AUTH_SOCK = "${configHome}/gnupg/S.gpg-agent.ssh"; } else {};
 in
 {
   home.sessionVariables = {
     GNUPGHOME = "${configHome}/gnupg";
-    SSH_AUTH_SOCK = "${configHome}/gnupg/S.gpg-agent.ssh";
-  };
+  } // homeVariables;
 
   programs.gpg = {
     enable = true;
