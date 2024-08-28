@@ -4,9 +4,9 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
+    disko.url = "github:nix-community/disko";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     devenv.url = "github:cachix/devenv";
@@ -52,6 +52,7 @@
         in import ./pkgs { inherit pkgs; } // {
           simpleVM = self.nixosConfigurations.simple.config.system.build.vm;
           odinSD = self.nixosConfigurations.odin-sdcard.config.system.build.sdImage;
+          odinImage = self.nixosConfigurations.odin-sdcard.config.system.build.diskoImagesScript;
         }
       );
 
@@ -61,6 +62,11 @@
       homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {
+        loki = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; inherit outputs; };
+          modules = [ ./machines/loki ];
+        };
+
         simple = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/simple ];
