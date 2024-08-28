@@ -8,7 +8,7 @@
     ./git.nix
     ./github.nix
     ./gnupg.nix
-    ./kraft.nix
+    # ./kraft.nix
     ./nvim.nix
     ./spotdl.nix
     ./ssh.nix
