@@ -7,6 +7,27 @@
   services.nix-daemon.enable = true;
   programs.nix-index.enable = true;
 
+  nix.linux-builder = {
+    enable = true;
+    ephemeral = true;
+    maxJobs = 4;
+    config = {
+      virtualisation = {
+        darwin-builder = {
+          diskSize = 40 * 1024;
+          memorySize = 8 * 1024;
+        };
+        cores = 6;
+      };
+    };
+  };
+
+  # TODO: needs a mkIf linux-builder is enabled
+  launchd.daemons.linux-builder.serviceConfig = {
+    StandardOutPath = "/var/log/darwin-builder.log";
+    StandardErrorPath = "/var/log/darwin-builder.log";
+  };
+
   system = {
     keyboard = {
       enableKeyMapping = true;

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 {
   home.packages = [ pkgs.tmux-cht ];
 
@@ -21,7 +21,6 @@
     terminal = "tmux-256color";
 
     plugins = with pkgs.tmuxPlugins; [
-      cpu
       vim-tmux-navigator
       {
         plugin = yank;
@@ -29,17 +28,6 @@
           bind-key -T copy-mode-vi v send-keys -X begin-selection
           bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
           bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
-        '';
-      }
-      {
-        plugin = resurrect;
-        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-      }
-      {
-        plugin = continuum;
-        extraConfig = ''
-          set -g @continuum-restore 'on'
-          set -g @continuum-save-interval '60' # minutes
         '';
       }
     ];
@@ -57,7 +45,12 @@
       bind -r j resize-pane -D 1
       bind -r k resize-pane -U 1
 
-      bind -r i run-shell "tmux neww ${pkgs.tmux-cht}/bin/tmux-cht.sh"
+      # Obsidian keybindings
+      bind-key o switch-client -T obsidian
+      bind-key -T obsidian t display-popup -h 100% -w 100% -x 0% -E "nvim -c 'ObsidianToday' -c 'ZenMode'"
+      bind-key -T obsidian d display-popup -h 100% -w 100% -x 0% -E "nvim -c 'ObsidianDailies' -c 'ZenMode'"
+      bind-key -T obsidian y display-popup -h 100% -w 100% -x 0% -E "nvim -c 'ObsidianYesterday' -c 'ZenMode'"
+      bind-key -T obsidian n display-popup -h 100% -w 100% -x 0% -E "nvim -c 'ObsidianNew' -c 'ZenMode'"
 
       # - Put this in your ~/.tmux.conf and replace XXX by your $TERM outside of tmux:
       set-option -sa terminal-features ',xterm-256color:RGB'
@@ -95,11 +88,15 @@
       set-option -g status-right-length "80"
       set-window-option -g window-status-separator ""
 
+      # status bar
       set-option -g status-left "#[bg=colour241,fg=colour248] #S #[bg=colour237,fg=colour241,nobold,noitalics,nounderscore]"
       set-option -g status-right "#[bg=colour237,fg=colour239 nobold, nounderscore, noitalics]#[bg=colour239,fg=colour246] %Y-%m-%d  %H:%M #[bg=colour239,fg=colour248,nobold,noitalics,nounderscore]#[bg=colour248,fg=colour237] #h "
 
       set-window-option -g window-status-current-format "#[bg=colour214,fg=colour237,nobold,noitalics,nounderscore]#[bg=colour214,fg=colour239] #I #[bg=colour214,fg=colour239,bold] #W#{?window_zoomed_flag,*Z,} #[bg=colour237,fg=colour214,nobold,noitalics,nounderscore]"
       set-window-option -g window-status-format "#[bg=colour239,fg=colour237,noitalics]#[bg=colour239,fg=colour223] #I #[bg=colour239,fg=colour223] #W #[bg=colour237,fg=colour239,noitalics]"
+
+      # default layout
+      set-hook -g after-new-window 'split-window -h -p 30; split-window -v -p 66; split-window -v -p 50'
     '';
   };
 }

@@ -4,16 +4,23 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
+    disko.url = "github:nix-community/disko";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nixvim.url = "github:nix-community/nixvim/nixos-24.05";
-    # nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    devenv.url = "github:cachix/devenv";
+    devenv.inputs.nixpkgs.follows = "nixpkgs";
+    nixvim.url = "github:tstachl/mynixvim/master";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, darwin, ... }@inputs:
+  nixConfig = {
+    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
+    extra-substituters = "https://devenv.cachix.org";
+  };
+
+  outputs = { self, nixpkgs, darwin, devenv, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -44,6 +51,8 @@
         let pkgs = nixpkgs.legacyPackages.${system};
         in import ./pkgs { inherit pkgs; } // {
           simpleVM = self.nixosConfigurations.simple.config.system.build.vm;
+          odinSD = self.nixosConfigurations.odin-sdcard.config.system.build.sdImage;
+          odinImage = self.nixosConfigurations.odin-sdcard.config.system.build.diskoImagesScript;
         }
       );
 
@@ -53,6 +62,11 @@
       homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {
+        loki = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; inherit outputs; };
+          modules = [ ./machines/loki ];
+        };
+
         simple = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/simple ];
@@ -66,6 +80,11 @@
         stingos-installer = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/sting/installer.nix ];
+        };
+
+        odin-sdcard = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; inherit outputs; };
+          modules = [ ./machines/odin/sdcard.nix ];
         };
       };
 
@@ -86,9 +105,15 @@
       #   };
       # };
 
-      devShell = forAllSystems(system:
+      devShells = forAllSystems(system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in pkgs.mkShell { buildInputs = with pkgs; [ lua-language-server nil nodePackages.bash-language-server ]; }
+        in
+        {
+          default = devenv.lib.mkShell {
+            inherit inputs pkgs;
+            modules = [ ./devenv.nix ];
+          };
+        }
       );
     };
 }
