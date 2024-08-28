@@ -18,6 +18,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "loki";
+  nixpkgs.hostPlatform = "x86_64-linux";
 
   time.timeZone = "Europe/Vienna";
 
