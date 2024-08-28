@@ -13,31 +13,33 @@
   fileSystems."/" = {
     device = "/dev/mmcblk0p3";
     fsType = "btrfs";
-    options = [ "subvol=root" ];
+    options = [ "subvol=root" "compress=zstd" "noatime" ];
   };
 
   fileSystems."/home" = {
     device = "/dev/mmcblk0p3";
     fsType = "btrfs";
-    options = [ "subvol=home" ];
+    options = [ "subvol=home" "compress=zstd" "noatime" ];
   };
 
   fileSystems."/nix" = {
     device = "/dev/mmcblk0p3";
     fsType = "btrfs";
-    options = [ "subvol=nix" ];
+    options = [ "subvol=nix" "compress=zstd" "noatime" ];
   };
 
   fileSystems."/persist" = {
     device = "/dev/mmcblk0p3";
     fsType = "btrfs";
-    options = [ "subvol=persist" ];
+    neededForBoot = true;
+    options = [ "subvol=persist" "compress=zstd" "noatime" ];
   };
 
   fileSystems."/var/log" = {
     device = "/dev/mmcblk0p3";
     fsType = "btrfs";
-    options = [ "subvol=log" ];
+    neededForBoot = true;
+    options = [ "subvol=log" "compress=zstd" "noatime" ];
   };
 
   fileSystems."/boot" = {
