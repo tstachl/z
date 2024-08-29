@@ -17,7 +17,7 @@
   };
 
   fileSystems."/home" = {
-    device = "/dev/mmcblk0p3";
+    device = "/dev/sda1";
     fsType = "btrfs";
     options = [ "subvol=home" "compress=zstd" "noatime" ];
   };
@@ -29,14 +29,14 @@
   };
 
   fileSystems."/persist" = {
-    device = "/dev/mmcblk0p3";
+    device = "/dev/sda1";
     fsType = "btrfs";
     neededForBoot = true;
     options = [ "subvol=persist" "compress=zstd" "noatime" ];
   };
 
   fileSystems."/var/log" = {
-    device = "/dev/mmcblk0p3";
+    device = "/dev/sda1";
     fsType = "btrfs";
     neededForBoot = true;
     options = [ "subvol=log" "compress=zstd" "noatime" ];
