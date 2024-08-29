@@ -18,9 +18,9 @@ in
          hostname = "192.168.1.169";
           user = "thomas";
           remoteForwards = [{
-            host.address =
+            bind.address =
               "/run/user/1000/gnupg/d.o6jzqfigwppq1eps4nhng6n5/S.gpg-agent";
-            bind.address = "/Users/thomas/.config/gnupg/S.gpg-agent.extra";
+            host.address = "/Users/thomas/.config/gnupg/S.gpg-agent.extra";
           }];
         };
       };
