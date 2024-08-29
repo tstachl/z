@@ -15,7 +15,7 @@ in
 
       matchBlocks = {
         loki = {
-         hostname = "192.168.1.169";
+         hostname = "loki";
           user = "thomas";
           remoteForwards = [{
             bind.address =
