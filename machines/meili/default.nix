@@ -15,6 +15,7 @@
 
     ../common/users/thomas
     ../common/users/thomas/desktop.nix
+    ./users/thomas.nix
   ];
 
   environment.systemPackages = with pkgs; [

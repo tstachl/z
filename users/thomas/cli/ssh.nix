@@ -10,11 +10,6 @@
         user = "thomas";
       };
 
-      vault = {
-        hostname = "vault";
-        user = "pi";
-      };
-
       "github.com" = {
         user = "git";
       };
