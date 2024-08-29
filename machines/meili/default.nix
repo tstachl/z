@@ -11,6 +11,7 @@
     # ../common/optional/openssh.nix
     # ../common/optional/podman.nix
     ../common/optional/skhd.nix
+    ../common/optional/tailscale.nix
     ../common/optional/yabai.nix
 
     ../common/users/thomas
