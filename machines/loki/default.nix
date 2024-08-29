@@ -7,6 +7,7 @@
     ../common/optional/fish.nix
     ../common/optional/nixos.nix
     ../common/optional/openssh.nix
+    ../common/optional/tailscale.nix
 
     ../common/users/thomas
     ../common/users/thomas/authorized_keys.nix
