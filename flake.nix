@@ -6,18 +6,14 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-    disko.url = "github:nix-community/disko";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.url = "github:tstachl/mynixvim/master";
     nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
-  };
-
-  nixConfig = {
-    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
-    extra-substituters = "https://devenv.cachix.org";
+    impermanence.url = "github:nix-community/impermanence";
+    sops-nix.url = "github:mic92/sops-nix";
   };
 
   outputs = { self, nixpkgs, darwin, devenv, ... }@inputs:

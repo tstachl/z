@@ -1,0 +1,10 @@
+keys:
+  - &thomas 7A53D4C6B481F7711588D34FDE749C31D060A160
+  - &loki age1jkjw2gep36mjf7rcvmhyjg3my54mvvpyuycn72n5upleclktuq8qcuhe0v
+creation_rules:
+  - path_regex: machines/loki/secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - pgp:
+      - *thomas
+      age:
+      - *loki

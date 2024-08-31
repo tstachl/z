@@ -1,6 +1,8 @@
 { pkgs ? (import ../nixpkgs.nix) { } }:
 {
-  caddy = pkgs.callPackage ./caddy.nix {};
+  caddy = pkgs.callPackage ./caddy.nix {
+    plugins = [ "github.com/caddy-dns/cloudflare" ];
+  };
   # devenv = pkgs.callPackage ./devenv {};
   drizzle-kit = pkgs.callPackage ./drizzle-kit {};
   geekworm-xscript = pkgs.callPackage ./geekworm-xscript.nix {};

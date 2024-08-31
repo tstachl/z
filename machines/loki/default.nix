@@ -1,5 +1,8 @@
+{ inputs, ... }:
 {
   imports = [
+    inputs.impermanence.nixosModules.impermanence
+
     ./hardware.nix
 
     ../common/global
@@ -7,16 +10,41 @@
     ../common/optional/fish.nix
     ../common/optional/nixos.nix
     ../common/optional/openssh.nix
+    ../common/optional/sops.nix
     ../common/optional/tailscale.nix
 
     ../common/users/thomas
     ../common/users/thomas/authorized_keys.nix
     ../common/users/thomas/groups.nix
     ../common/users/thomas/nixos.nix
+
+    ./services/caddy.nix
+    ./services/vaultwarden.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # impermanence
+  environment.persistence."/persist" = {
+    directories = [
+      "/var/lib/nixos"
+      "/var/lib/tailscale"
+    ];
+
+    files = [
+      "/etc/machine-id"
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/ssh_host_rsa_key"
+      "/etc/ssh/ssh_host_rsa_key.pub"
+    ];
+  };
+
+  security.sudo.extraConfig = ''
+    # rollback results in sudo lectures after each reboot
+    Defaults lecture = never
+  '';
 
   networking.hostName = "loki";
   nixpkgs.hostPlatform = "x86_64-linux";
