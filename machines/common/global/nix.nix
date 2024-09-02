@@ -20,7 +20,7 @@
 
     extraOptions = ''
       warn-dirty = false
-      experimental-features = nix-command flakes
+      experimental-features = nix-command flakes impure-derivations
       auto-optimise-store = true
     '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
       extra-platforms = x86_64-darwin aarch64-darwin

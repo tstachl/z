@@ -12,6 +12,7 @@
     devenv.inputs.nixpkgs.follows = "nixpkgs";
     nixvim.url = "github:tstachl/mynixvim/master";
     nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix-bitcoin.url = "github:fort-nix/nix-bitcoin/release";
     impermanence.url = "github:nix-community/impermanence";
     sops-nix.url = "github:mic92/sops-nix";
   };

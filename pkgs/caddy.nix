@@ -4,6 +4,7 @@ stdenv.mkDerivation rec {
   pname = "caddy";
   version = "2.7.6";
   dontUnpack = true;
+  sandbox = false;
 
   nativeBuildInputs = with pkgs; [ git go xcaddy ];
   buildInputs = with pkgs; [ nss ];

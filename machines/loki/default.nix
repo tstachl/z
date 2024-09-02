@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [
     inputs.impermanence.nixosModules.impermanence
@@ -18,12 +18,15 @@
     ../common/users/thomas/groups.nix
     ../common/users/thomas/nixos.nix
 
+    ./services/bitcoin.nix
     ./services/caddy.nix
     ./services/vaultwarden.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  environment.systemPackages = with pkgs; [ btop ];
 
   # impermanence
   environment.persistence."/persist" = {
@@ -47,6 +50,7 @@
   '';
 
   networking.hostName = "loki";
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
   nixpkgs.hostPlatform = "x86_64-linux";
 
   time.timeZone = "Europe/Vienna";
