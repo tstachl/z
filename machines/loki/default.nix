@@ -4,6 +4,7 @@
     inputs.impermanence.nixosModules.impermanence
 
     ./hardware.nix
+    ./harden.nix
 
     ../common/global
     ../common/optional/gnupg.nix
@@ -20,6 +21,7 @@
 
     ./services/bitcoin.nix
     ./services/caddy.nix
+    ./services/monitoring.nix
     ./services/vaultwarden.nix
   ];
 
