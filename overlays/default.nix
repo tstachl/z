@@ -17,6 +17,12 @@ rec {
 
     kraft = prev.kraft.overrideAttrs
       (old: inputs.nixpkgs.lib.recursiveUpdate old { meta.broken = false; });
+
+    # gomobile-darwin = prev.gomobile.overrideAttrs { withAndroidPkgs = false; };
+    gomobile-darwin = prev.gomobile.override {
+      withAndroidPkgs = false;
+      # androidPkgs = self.androidEnvCustom.compose;
+    };
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
