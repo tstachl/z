@@ -11,7 +11,9 @@
 
     # add important packages
     systemPackages = with pkgs; [
-      git # parted TODO: fix for darwin nixos
+      git
+      ripgrep
+      jq
     ];
   };
 }

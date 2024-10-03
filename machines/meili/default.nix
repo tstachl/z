@@ -38,10 +38,12 @@
       "docker"
       # "bitwarden"
       # "deepl"
-      # "ledger-live"
+      "ledger-live"
       "mullvadvpn"
       "obsidian"
       "openaudible"
+      "signal"
+      # "tailscale"
       "tor-browser"
       "protonvpn"
       # "whatsapp"
@@ -54,7 +56,7 @@
       # "UTM Virtual Machines" = 1538878817; costs $9.99 in the app store
       # "Speechify" = 1624912180;
       # "DaVinci Resolve" = 571213070;
-      "Orbot" = 1609461599;
+      # "Orbot" = 1609461599;
 
       # Safari Extensions
       # "AdGuard for Safari" = 1440147259;
@@ -62,6 +64,7 @@
       # "SimpleLogin" = 1494051017;
       # "Video Speed Controller" = 1588368612;
       # "Vimari" = 1480933944;
+      # "XCode" = 497799835;
     };
 
     enable = true;

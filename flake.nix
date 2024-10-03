@@ -79,6 +79,11 @@
           modules = [ ./machines/sting/installer.nix ];
         };
 
+        thor = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; inherit outputs; };
+          modules = [ ./machines/thor ];
+        };
+
         odin-sdcard = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/odin/sdcard.nix ];
