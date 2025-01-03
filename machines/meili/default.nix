@@ -20,7 +20,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    pkgs.unstable.arc-browser
+    unstable.arc-browser
     # pkgs.unstable.zed-editor
     alacritty
     jq
@@ -46,6 +46,7 @@
       # "tailscale"
       "tor-browser"
       "protonvpn"
+      "vlc"
       # "whatsapp"
       # "krunkit"
     ];
