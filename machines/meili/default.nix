@@ -21,6 +21,7 @@
 
   environment.systemPackages = with pkgs; [
     unstable.arc-browser
+    unstable.obsidian
     # pkgs.unstable.zed-editor
     alacritty
     jq
@@ -38,8 +39,8 @@
       "docker"
       # "bitwarden"
       # "deepl"
-      "ledger-live"
-      "mullvadvpn"
+      # "ledger-live"
+      # "mullvadvpn"
       "obsidian"
       "openaudible"
       "signal"
@@ -78,6 +79,6 @@
     remoteLogin = true;
   };
 
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "America/Lima";
   system.stateVersion = 4;
 }

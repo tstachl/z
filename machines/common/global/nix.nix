@@ -15,8 +15,9 @@
       ];
 
       trusted-users = [ "root" "@wheel" "@admin" ];
-      auto-optimise-store = lib.mkDefault true;
     };
+
+    optimise.automatic = lib.mkDefault true;
 
     extraOptions = ''
       warn-dirty = false
