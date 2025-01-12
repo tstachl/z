@@ -1,4 +1,4 @@
-{ inputs, outputs, ... }:
+{ inputs, outputs, lib, ... }:
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
@@ -28,6 +28,13 @@
     StandardErrorPath = "/var/log/darwin-builder.log";
   };
 
+  # TODO: move into module:
+  system.activationScripts.extraActivation.text = lib.mkAfter ''
+    # disable spotlight
+    echo "disable spotlight..." >&2
+    mdutil -i off /
+  '';
+
   system = {
     keyboard = {
       enableKeyMapping = true;
@@ -48,7 +55,6 @@
         wvous-br-corner = 14; # quick note
         wvous-tl-corner = 1; # disabled
         wvous-tr-corner = 1; # disabled
-
       };
 
       finder = {
@@ -79,14 +85,27 @@
 
       NSGlobalDomain = {
         AppleInterfaceStyle = "Dark";
-        NSDocumentSaveNewDocumentsToCloud = false;
+        AppleKeyboardUIMode = 3;
+        ApplePressAndHoldEnabled = false;
+        AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
+        KeyRepeat = 6;
+        InitialKeyRepeat = 25;
+        NSAutomaticCapitalizationEnabled = false;
+        NSDocumentSaveNewDocumentsToCloud = true;
         NSNavPanelExpandedStateForSaveMode = true;
+        NSNavPanelExpandedStateForSaveMode2 = true;
+        NSWindowResizeTime = 0.001;
         PMPrintingExpandedStateForPrint = true;
+        PMPrintingExpandedStateForPrint2 = true;
+        # WebKitDeveloperExtras = true;
         _HIHideMenuBar = true;
         "com.apple.swipescrolldirection" = true;
       };
 
       screencapture.location = "/tmp";
+
+      screensaver.askForPassword = true;
 
       trackpad = {
         ActuationStrength = 0;
@@ -97,6 +116,10 @@
         TrackpadRightClick = null;
         TrackpadThreeFingerDrag = true;
       };
+
+      WindowManager.StageManagerHideWidgets = true;
+      WindowManager.StandardHideDesktopIcons = true;
+      WindowManager.StandardHideWidgets = true;
     };
 
     rosetta.enable = true;

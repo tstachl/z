@@ -22,8 +22,10 @@
   environment.systemPackages = with pkgs; [
     unstable.arc-browser
     unstable.obsidian
+    unstable.raycast
+    unstable.utm
     # pkgs.unstable.zed-editor
-    alacritty
+    # alacritty
     jq
   ];
 
@@ -34,6 +36,7 @@
 
   homebrew = {
     casks = [
+      # "mac-mouse-fix"
       "alacritty"
       # "brave-browser"
       "docker"
