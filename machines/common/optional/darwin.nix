@@ -89,8 +89,8 @@
         ApplePressAndHoldEnabled = false;
         AppleShowAllExtensions = true;
         AppleShowAllFiles = true;
-        KeyRepeat = 6;
-        InitialKeyRepeat = 25;
+        KeyRepeat = 25;
+        InitialKeyRepeat = 120;
         NSAutomaticCapitalizationEnabled = false;
         NSDocumentSaveNewDocumentsToCloud = true;
         NSNavPanelExpandedStateForSaveMode = true;
@@ -101,6 +101,7 @@
         # WebKitDeveloperExtras = true;
         _HIHideMenuBar = true;
         "com.apple.swipescrolldirection" = true;
+        # "com.apple.BezelServices" = 5;
       };
 
       screencapture.location = "/tmp";
