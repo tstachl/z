@@ -89,8 +89,8 @@
         ApplePressAndHoldEnabled = false;
         AppleShowAllExtensions = true;
         AppleShowAllFiles = true;
-        KeyRepeat = 25;
-        InitialKeyRepeat = 120;
+        KeyRepeat = 1;
+        InitialKeyRepeat = 12;
         NSAutomaticCapitalizationEnabled = false;
         NSDocumentSaveNewDocumentsToCloud = true;
         NSNavPanelExpandedStateForSaveMode = true;
