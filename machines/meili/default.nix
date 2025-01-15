@@ -38,10 +38,11 @@
     casks = [
       # "mac-mouse-fix"
       "alacritty"
-      # "brave-browser"
-      "docker"
       # "bitwarden"
+      # "brave-browser"
+      # "docker"
       # "deepl"
+      "hot"
       # "ledger-live"
       # "mullvadvpn"
       "obsidian"
