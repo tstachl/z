@@ -4,6 +4,7 @@
     ../common/global
 
     ../common/optional/cachix.nix
+    ../common/optional/colima.nix
     ../common/optional/darwin.nix
     ../common/optional/devenv.nix
     ../common/optional/fonts.nix
@@ -23,7 +24,6 @@
     unstable.arc-browser
     unstable.obsidian
     unstable.raycast
-    unstable.utm
     # pkgs.unstable.zed-editor
     # alacritty
     jq
@@ -37,12 +37,12 @@
   homebrew = {
     casks = [
       # "mac-mouse-fix"
-      "alacritty"
+      # "alacritty" # => we're using the home-manager package now
       # "bitwarden"
       # "brave-browser"
       # "docker"
       # "deepl"
-      "hot"
+      # "hot"
       # "ledger-live"
       # "mullvadvpn"
       "obsidian"

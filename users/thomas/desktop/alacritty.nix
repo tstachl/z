@@ -101,7 +101,7 @@
         opacity = 0.8;
       };
 
-      shell = {
+      terminal.shell = {
         program = "${pkgs.fish}/bin/fish";
         args = [ "--login" ];
       };
