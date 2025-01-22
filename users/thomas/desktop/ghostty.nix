@@ -44,10 +44,16 @@
     };
 
     settings = {
+      background-opacity = 0.8;
       font-family = "FiraCode Nerd Font";
       font-size = 11.0;
 
+      macos-titlebar-style = "hidden";
       theme = "iceberg-dark";
+
+      window-padding-x = 12;
+      window-padding-y = 12;
+      window-theme = "ghostty";
     };
   };
 }
