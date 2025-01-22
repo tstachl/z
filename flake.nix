@@ -84,6 +84,11 @@
           modules = [ ./machines/thor ];
         };
 
+        modgud = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; inherit outputs; };
+          modules = [ ./machines/modgud ];
+        };
+
         odin-sdcard = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/odin/sdcard.nix ];
