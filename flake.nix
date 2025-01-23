@@ -22,7 +22,7 @@
     nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-darwin, darwin, devenv, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-darwin, darwin, devenv, home-manager, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -82,14 +82,20 @@
         };
       };
 
-      # homeConfigurations = {
-      #   thomas = home-manager.lib.homeManagerConfiguration {
-      #     inherit pkgs;
-      #     extraSpecialArgs = { inherit inputs; inherit (self) outputs; };
-
-      #     modules = [ ./users/thomas ];
-      #   };
-      # };
+      homeConfigurations = forAllSystems (system:
+        let
+          pkgs = if builtins.match ".*darwin.*" system != null then
+                   nixpkgs-darwin.legacyPackages.${system}
+                 else
+                   nixpkgs.legacyPackages.${system};
+        in {
+          thomas = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            extraSpecialArgs = { inherit inputs; inherit outputs; };
+            modules = [ ./users/thomas ];
+          };
+        }
+      );
 
       devShells = forAllSystems(system:
         let pkgs = nixpkgs.legacyPackages.${system};
