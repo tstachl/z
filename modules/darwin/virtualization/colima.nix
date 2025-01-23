@@ -93,7 +93,7 @@ in
 
     launchd.daemons.colima = {
       script =
-        concatStringsSep " " [
+        concatStringsSep " " ([
           "exec"
           (getExe cfg.package)
           "start"
@@ -101,8 +101,7 @@ in
           "--runtime ${cfg.runtime}"
           "--arch ${cfg.architectue}"
           "--vm-type ${cfg.vmType}"
-        ]
-        + escapeShellArgs cfg.extraFlags;
+        ] ++ cfg.extraFlags);
 
       serviceConfig.KeepAlive = true;
       serviceConfig.RunAtLoad = true;

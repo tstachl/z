@@ -22,7 +22,7 @@
     nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, darwin, devenv, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-darwin, darwin, devenv, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -64,8 +64,19 @@
       };
 
       darwinConfigurations = {
-        meili = darwin.lib.darwinSystem {
+        # TODO: find a better way of doing this with `nixpkgs-darwin`
+        meili = let
           system = "aarch64-darwin";
+          pkgs = import nixpkgs-darwin {
+            inherit system;
+            overlays = [
+              outputs.overlays.additions
+              outputs.overlays.modifications
+              outputs.overlays.unstable-packages
+            ];
+          };
+        in darwin.lib.darwinSystem {
+          inherit pkgs; inherit system;
           specialArgs = { inherit inputs; inherit outputs; };
           modules = [ ./machines/meili ];
         };
