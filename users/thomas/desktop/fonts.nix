@@ -3,7 +3,7 @@
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
-    nerd-fonts.fira-code
+    (nerdfonts.override { fonts = [ "FiraCode" ]; })
     liberation_ttf
   ];
 }
