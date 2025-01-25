@@ -15,5 +15,5 @@ in
     shell = pkgs.fish;
   };
 
-  home-manager.users.thomas = import ../../../../users/thomas/slim.nix;
+  # home-manager.users.thomas = import ../../../../users/thomas/slim.nix;
 }

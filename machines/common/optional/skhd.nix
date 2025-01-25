@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
+
+let
+  inherit (lib.meta) getExe;
+in
+
 {
   environment.systemPackages = with pkgs; [ skhd ];
 
@@ -9,10 +14,15 @@
       cmd - return : ${pkgs.alacritty}/bin/alacritty
 
       # focus window
-      alt - h : ${pkgs.yabai}/bin/yabai -m window --focus west
-      alt - j : ${pkgs.yabai}/bin/yabai -m window --focus south
-      alt - k : ${pkgs.yabai}/bin/yabai -m window --focus north
-      alt - l : ${pkgs.yabai}/bin/yabai -m window --focus east
+      ctrl - h : ${pkgs.yabai}/bin/yabai -m window --focus west
+      ctrl - j : ${pkgs.yabai}/bin/yabai -m window --focus south
+      ctrl - k : ${pkgs.yabai}/bin/yabai -m window --focus north
+      ctrl - l : ${pkgs.yabai}/bin/yabai -m window --focus east
+
+      # move spaces
+      shift + cmd - l : ${getExe pkgs.yabai} -m space --focus $(($(${getExe
+                        pkgs.yabai} -m query --spaces | ${getExe pkgs.jq}
+                        '.[] | select(."has-focus" == true) | .index') + 1))
 
       # swap managed window
       shift + alt - h : ${pkgs.yabai}/bin/yabai -m window --swap west

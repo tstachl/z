@@ -42,6 +42,7 @@
       # "brave-browser"
       # "docker"
       # "deepl"
+      "ghostty"
       # "hot"
       # "ledger-live"
       # "mullvadvpn"

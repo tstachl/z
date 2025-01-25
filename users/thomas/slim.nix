@@ -1,7 +1,7 @@
 { pkgs, lib, config, outputs, ... }:
 let
-  homelocation = with pkgs.stdenv.hostplatform;
-    if isdarwin then "/users" else "/home";
+  homeLocation = with pkgs.stdenv.hostPlatform;
+    if isDarwin then "/Users" else "/home";
 in
 {
   imports = [
@@ -13,10 +13,10 @@ in
     ./cli/ssh.nix
     ./cli/starship.nix
     ./cli/zsh.nix
-  ] ++ (builtins.attrvalues outputs.homemanagermodules);
+  ] ++ (builtins.attrValues outputs.homeManagerModules);
 
   nix = {
-    package = lib.mkdefault pkgs.nixflakes;
+    package = lib.mkDefault pkgs.nixFlakes;
     settings.trusted-users = [ "thomas" ];
   };
 
@@ -24,12 +24,12 @@ in
   xdg.enable = true;
 
   home = {
-    username = lib.mkdefault "thomas";
-    homedirectory = lib.mkdefault "${homelocation}/${config.home.username}";
-    sessionvariables = {
-      editor = "${pkgs.neovim}/bin/nvim";
-      shell = "${pkgs.fish}/bin/fish";
+    username = lib.mkDefault "thomas";
+    homeDirectory = lib.mkDefault "${homeLocation}/${config.home.username}";
+    sessionVariables = {
+      EDITOR = "${pkgs.neovim}/bin/nvim";
+      SHELL = "${pkgs.fish}/bin/fish";
     };
-    stateversion = lib.mkdefault "24.05";
+    stateVersion = lib.mkDefault "24.05";
   };
 }

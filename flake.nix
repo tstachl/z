@@ -9,8 +9,8 @@
     darwin.url = "github:lnl7/nix-darwin/nix-darwin-24.11";
     darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
 
-    home-manager.url = "github:nix-community/home-manager/release-24.11";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    # home-manager.url = "github:nix-community/home-manager/release-24.11";
+    # home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -54,7 +54,6 @@
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       darwinModules = import ./modules/darwin;
-      homeManagerModules = import ./modules/home-manager;
 
       nixosConfigurations = {
         modgud = nixpkgs.lib.nixosSystem {
@@ -81,21 +80,6 @@
           modules = [ ./machines/meili ];
         };
       };
-
-      homeConfigurations = forAllSystems (system:
-        let
-          pkgs = if builtins.match ".*darwin.*" system != null then
-                   nixpkgs-darwin.legacyPackages.${system}
-                 else
-                   nixpkgs.legacyPackages.${system};
-        in {
-          thomas = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            extraSpecialArgs = { inherit inputs; inherit outputs; };
-            modules = [ ./users/thomas ];
-          };
-        }
-      );
 
       devShells = forAllSystems(system:
         let pkgs = nixpkgs.legacyPackages.${system};

@@ -1,7 +1,7 @@
 { inputs, outputs, lib, ... }:
 {
   imports = [
-    inputs.home-manager.darwinModules.home-manager
+    # inputs.home-manager.darwinModules.home-manager
   ] ++ (builtins.attrValues outputs.darwinModules);
 
   services.nix-daemon.enable = true;

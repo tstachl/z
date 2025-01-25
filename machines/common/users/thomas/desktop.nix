@@ -1,3 +1,3 @@
 {
-  home-manager.users.thomas = import ../../../../users/thomas/desktop;
+  # home-manager.users.thomas = import ../../../../users/thomas/desktop;
 }
